@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+bs4 = "*"
+beautifulsoup4 = "*"
+requests = "*"
+lxml = "*"
+pyttsx3 = "*"
+gtts = "*"
+asyncio = "*"
+aiohttp = {extras = ["speedups"], version = "*"}
+cchardet = "*"
+aiodns = "*"
+pygame = "*"
+python-vlc = "*"
+pydub = "*"
+blessings = "*"
+snakeviz = "*"
+httpx = {extras = ["http2"], version = "*"}
+
+[dev-packages]
+snakeviz = "*"
+
+[requires]
+python_version = "3.8"
