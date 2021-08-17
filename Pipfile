@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 bs4 = "*"
 beautifulsoup4 = "*"
-requests = "*"
 lxml = "*"
 pyttsx3 = "*"
 gtts = "*"
@@ -18,11 +17,9 @@ pygame = "*"
 python-vlc = "*"
 pydub = "*"
 blessings = "*"
-snakeviz = "*"
 httpx = {extras = ["http2"], version = "*"}
 
 [dev-packages]
-snakeviz = "*"
 
 [requires]
 python_version = "3.8"
