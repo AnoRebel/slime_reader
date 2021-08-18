@@ -10,25 +10,67 @@ from bs4 import BeautifulSoup
 from blessings import Terminal
 from typing import Dict, List
 
-ORIGIN = "https://novelsonline.net"
 
-ORIGIN_ALT = "https://readnovelfull.com"
+def get_key(a_dict: Dict[str, str], val: str) -> str:
+    """
+    Returns a key from a value in a dictionary
 
-HEADERS = {
-    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.115 Safari/537.36"
-}
+    Parameters
+    ----------
+        a_dict: Dict[str, str]
+            The dictionary to use
+        val: str
+            The value used to get key from given Dictionary
 
-BASE_URL = ORIGIN + "/tensei-shitara-slime-datta-ken-ln/volume-1/chapter-pr"
-BASE_URL_ALT = ORIGIN_ALT + "/tensei-shitara-slime-datta-ken/prologue.html"
+    Returns
+    -------
+        key: str
+            The key from the given value in the Dictionary
+    """
+    key_list = list(a_dict.keys())
+    val_list = list(a_dict.values())
+    try:
+        position = val_list.index(val)
+        return key_list[position]
+    except ValueError:
+        return "Invalid Chapter!"
+
+
+def get_index(a_list: List[str], curr: str) -> int:
+    """
+    Returns the (index + 1) of a value in the given List
+
+    Parameters
+    ----------
+        a_list: List[str]
+            The list to use
+        curr: str
+            The value used to get postion in list
+
+    Returns
+    -------
+        pos: int
+            The position of value in list + 1
+            If not found, 0
+    """
+    try:
+        idx = a_list.index(curr)
+        pos = int(idx) + 1
+        return pos
+    except ValueError:
+        return 0
 
 
 def asyncinit(cls):
     """
     Using this function as a decorator allows you to define async __init__.
     So you can create objects by `await MyClass(params)`
+
     NOTE:
     A slight caveat with this is you need to override the __new__ method
+
     Example usage:
+
     `py
     @asyncinit
     class Foo(object):
@@ -75,19 +117,59 @@ class AsyncObject:
 
 class Tensura(AsyncObject):
     """
-    Docstring soon
+    Tensura object, inheriting the AsyncObject class to enable async __init__
+    This class loads a link(depending on passed param), crawls it
+    And optionally reads to you either online or offline
+
+    Attributes
+    ----------
+    local: bool
+        either use local reader(pyttsx3 or VLC) or online(gTTS) reader
+    alt: bool (Default: False)
+        Use https://readnovelfull.com if true, else https://novelsonline.net
+
+    Methods
+    -------
+    async crawl(link=None):
+        Crawls the provided link, fills some global variable and returns the
+        content
+    async read(text: str):
+        Reads the given text using either gTTS or local
+    async load_next():
+        Load the next chapter but dont read it
+    async next():
+        Set the next chapter and read(optional)
+    async load_prev():
+        Load the previous chapter but dont read it
+    async prev():
+        Set the previous chapter and read(optional)
+    async goto(chapter: int):
+        Go to the given chapter number for the site that supports it
+    progress():
+        Returns the current progress of your reading
+    play():
+        Using the configured player, play the current chapter
+    pause():
+        Using the configured player, pause the reading
+    unpause():
+        Using the configured player, play the paused reading
+    stop():
+        Using the configured player, stop playing
     """
 
     loop = asyncio.get_event_loop()
     term = Terminal()
+    ORIGIN = "https://novelsonline.net"
+    ORIGIN_ALT = "https://readnovelfull.com"
+    BASE_URL = ORIGIN + "/tensei-shitara-slime-datta-ken-ln/volume-1/chapter-pr"
+    BASE_URL_ALT = ORIGIN_ALT + "/tensei-shitara-slime-datta-ken/prologue.html"
     HEADERS = {
         "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.115 Safari/537.36"
     }
 
-    async def __init__(self, local: bool, alt: bool = False, rate: int = 180) -> None:
+    async def __init__(self, local: bool, alt: bool = False) -> None:
         self.local: bool = local
         self.alt: bool = alt
-        self.rate: int = rate
         self.player = None
         self.chapters: Dict[str, str] = {}
         self.audio_file: str = ""
@@ -115,10 +197,21 @@ class Tensura(AsyncObject):
 
     async def crawl(self, link=None) -> str:
         """
-        Docstring soon
+        Crawls the provided link or th default link(firs chapter)
+
+        Parameters
+        ----------
+        link : str, optional
+            The link to the current chapter to be read
+            If None, loads the first chapter (default is None)
+
+        Returns
+        -------
+        chapter_content: str
+            The crawled chapter contents
         """
         self.current_chapter = (
-            link if link is not None else BASE_URL_ALT if self.alt else BASE_URL
+            link if link is not None else self.BASE_URL_ALT if self.alt else self.BASE_URL
         )
         async with self.session.get(self.current_chapter) as resp:
             if resp.status == 200:
@@ -181,59 +274,24 @@ class Tensura(AsyncObject):
                 print(f"{resp.status}: Couldn't load chapter!")
                 return f"{resp.status}: Couldn't load chapter!"
 
-    async def load_next(self):
+    async def read(self, text: str) -> None:
         """
-        Docstring soon
-        """
-        chapter = asyncio.create_task(self.crawl(self.next_chapter))
-        # self.current_chapter_contents = await chapter
-        return chapter
+        Reads the provided text.
 
-    async def next(self) -> None:
-        """
-        Docstring soon
-        """
-        self.current_chapter_contents = await self.load_next()
-        asyncio.create_task(self.read(self.current_chapter_contents))
+        Parameters
+        ----------
+        text : str
+            Text to be read aloud
 
-    async def load_prev(self):
-        """
-        Docstring soon
-        """
-        chapter = asyncio.create_task(self.crawl(self.previous_chapter))
-        # self.current_chapter_contents = await chapter
-        return chapter
-
-    async def prev(self) -> None:
-        """
-        Docstring soon
-        """
-        self.current_chapter_contents = await self.load_prev()
-        asyncio.create_task(self.read(self.current_chapter_contents))
-
-    async def goto(self, chapter: int) -> None:
-        """
-        Docstring soon
-        """
-        if len(self.chapter_links) > 0:
-            link = self.chapter_links[chapter + 1]
-            chapt = asyncio.create_task(self.crawl(link))
-            self.current_chapter_contents = await chapt
-        else:
-            print(
-                f"{self.term.bold}{self.term.red}The site {self.term.green_on_black(self.term.underline(ORIGIN_ALT))} doesn't provide a scrapable chapter list!{self.term.normal}"
-            )
-            self.read("This site doesn't provide a scrapable chapter list!")
-
-    async def read(self, text: str):
-        """
-        Docstring soon
+        Returns
+        -------
+        None
         """
         if self.local:
             self.player = pyttsx3.init()
             # I like a female voice
             self.player.setProperty("voice", "english+f3")
-            self.player.setProperty("rate", self.rate)
+            self.player.setProperty("rate", 180)
             self.player.say(text)
             task = asyncio.create_task(self.player.runAndWait())
             # await task
@@ -263,9 +321,86 @@ class Tensura(AsyncObject):
             # os.system(f"mpg321 {audio.mp3}")
             # os.system(f"play -t mp3 {audio.mp3}")
 
+    async def load_next(self):
+        """
+        Crawls the next chapter but does not read it.
+        Await self.next() to read it.
+
+        Returns
+        -------
+        AsyncTask: asyncio.Task
+            The task to be awaited
+        """
+        chapter = asyncio.create_task(self.crawl(self.next_chapter))
+        # self.current_chapter_contents = await chapter
+        return chapter
+
+    async def next(self) -> None:
+        """
+        Set the next chapter as the current chapter and read it(optional).
+
+        Returns
+        -------
+        None
+        """
+        self.current_chapter_contents = await self.load_next()
+        asyncio.create_task(self.read(self.current_chapter_contents))
+
+    async def load_prev(self):
+        """
+        Crawls the previous chapter but does not read it.
+        Await self.prev() to read it
+
+        Returns
+        -------
+        AsyncTask: asyncio.Task
+            The task to be awaited
+        """
+        chapter = asyncio.create_task(self.crawl(self.previous_chapter))
+        # self.current_chapter_contents = await chapter
+        return chapter
+
+    async def prev(self) -> None:
+        """
+        Set the previous chapter as the current chapter and read it(optional).
+
+        Returns
+        -------
+        None
+        """
+        self.current_chapter_contents = await self.load_prev()
+        asyncio.create_task(self.read(self.current_chapter_contents))
+
+    async def goto(self, chapter: int) -> None:
+        """
+        If available and if site provides chapters, crawl it and set as current chapter.
+
+        Parameters
+        ----------
+        chapter : int
+            The chapter to crawl for reading
+
+        Returns
+        -------
+        None
+        """
+        if len(self.chapter_links) > 0:
+            link = self.chapter_links[chapter - 1]
+            chapt = asyncio.create_task(self.crawl(link))
+            self.current_chapter_contents = await chapt
+        else:
+            print(
+                f"{self.term.bold}{self.term.red}The site {self.term.green_on_black(self.term.underline(self.ORIGIN_ALT))} doesn't provide a scrapable chapter list!{self.term.normal}"
+            )
+            self.read("This site doesn't provide a scrapable chapter list!")
+
     def progress(self) -> None:
         """
-        Docstring soon
+        Prints out and reads aloud the current progress/chapter being read.
+
+        Returns
+        -------
+        None
         """
         if len(self.chapter_links) > 0:
             print(
@@ -282,21 +417,33 @@ class Tensura(AsyncObject):
 
     def play(self) -> None:
         """
-        Docstring soon
+        Plays the currently loaded chapter, with the configured player.
+
+        Returns
+        -------
+        None
         """
         if self.player is not None:
             self.player.play()
 
     def pause(self) -> None:
         """
-        Docstring soon
+        Pauses the currently playing chapter, if any.
+
+        Returns
+        -------
+        None
         """
         if self.player is not None:
             self.player.pause()
 
     def unpause(self) -> None:
         """
-        Docstring soon
+        Unpauses/plays the currently paused chapter.
+
+        Returns
+        -------
+        None
         """
         if self.player is not None:
             try:
@@ -306,41 +453,36 @@ class Tensura(AsyncObject):
 
     def stop(self) -> None:
         """
-        Docstring soon
+        Stops the currently playing chapter, if any.
+
+        Returns
+        -------
+        None
         """
         if self.player is not None:
             self.player.stop()
 
 
-def get_key(a_dict: Dict[str, str], key: str) -> str:
+async def test(local: bool = True) -> None:
     """
-    Docstring soon
-    """
-    key_list = list(a_dict.keys())
-    val_list = list(a_dict.values())
-    try:
-        position = val_list.index(key)
-        return key_list[position]
-    except ValueError:
-        return "Invalid Chapter!"
+    A simple test method for `aiohttp` and `httpx`
 
+    Parameters
+    ----------
+    local: bool
+        Whether to use offline(local) reader or online reader (default: True)
 
-def get_index(a_list: List[str], curr: str) -> int:
+    Returns
+    -------
+    None
     """
-    Docstring soon
-    """
-    try:
-        count = a_list.index(curr)
-        count = int(count) + 1
-        return count
-    except ValueError:
-        return 0
-
-
-async def test():
-    """
-    Docstring soon
-    """
+    ORIGIN = "https://novelsonline.net"
+    ORIGIN_ALT = "https://readnovelfull.com"
+    BASE_URL = ORIGIN + "/tensei-shitara-slime-datta-ken-ln/volume-1/chapter-pr"
+    BASE_URL_ALT = ORIGIN_ALT + "/tensei-shitara-slime-datta-ken/prologue.html"
+    HEADERS = {
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.115 Safari/537.36"
+    }
     async with aiohttp.ClientSession(headers=HEADERS) as session:
         async with session.get(BASE_URL_ALT) as res:
             content = await res.text()
@@ -354,6 +496,43 @@ async def test():
             raw_chapter_contents = soup.find("div", id="chr-content")
             chapter_contents = raw_chapter_contents.get_text()
             print(chapter_contents)
+            if local:
+                player = pyttsx3.init()
+                # I like a female voice
+                player.setProperty("voice", "english+f3")
+                player.setProperty("rate", 180)
+                player.say(chapter_contents)
+                task = asyncio.create_task(player.runAndWait())
+                # await task
+            else:
+                audio_file = uuid4().hex
+                if os.path.exists(f"{audio_file}.mp3"):
+                    os.remove(f"{audio_file}.mp3")
+                if os.path.exists(f"{audio_file}.ogg"):
+                    os.remove(f"{audio_file}.ogg")
+                tts = gTTS(text=chapter_contents, lang="en")
+                tts.save(f"{audio_file}.mp3")
+                try:
+                    import vlc
+
+                    player = vlc.MediaPlayer(f"{audio_file}.mp3")
+                except ImportError:
+                    from pydub import AudioSegment
+                    pygame.mixer.init()
+
+                    AudioSegment.from_mp3(f"{audio_file}.mp3").export(
+                        f"{audio_file}.ogg", format="ogg"
+                    )
+                    load = asyncio.create_task(
+                        pygame.mixer.music.load(f"{audio_file}.ogg")
+                    )
+                    player = pygame.mixer.music
+                    await load
+                # player.play()
+                ## OS players (needs installation)
+                # os.system(f"mpg123 {audio.mp3}")
+                # os.system(f"mpg321 {audio.mp3}")
+                # os.system(f"play -t mp3 {audio.mp3}")
             #  return chapter_contents
 
     async with httpx.AsyncClient(headers=HEADERS) as session:
@@ -369,6 +548,43 @@ async def test():
         raw_chapter_contents = soup.find("div", id="chr-content")
         chapter_contents = raw_chapter_contents.get_text()
         print(chapter_contents)
+        if local:
+                player = pyttsx3.init()
+                # I like a female voice
+                player.setProperty("voice", "english+f3")
+                player.setProperty("rate", 180)
+                player.say(chapter_contents)
+                task = asyncio.create_task(player.runAndWait())
+                # await task
+            else:
+                audio_file = uuid4().hex
+                if os.path.exists(f"{audio_file}.mp3"):
+                    os.remove(f"{audio_file}.mp3")
+                if os.path.exists(f"{audio_file}.ogg"):
+                    os.remove(f"{audio_file}.ogg")
+                tts = gTTS(text=chapter_contents, lang="en")
+                tts.save(f"{audio_file}.mp3")
+                try:
+                    import vlc
+
+                    player = vlc.MediaPlayer(f"{audio_file}.mp3")
+                except ImportError:
+                    from pydub import AudioSegment
+                    pygame.mixer.init()
+
+                    AudioSegment.from_mp3(f"{audio_file}.mp3").export(
+                        f"{audio_file}.ogg", format="ogg"
+                    )
+                    load = asyncio.create_task(
+                        pygame.mixer.music.load(f"{audio_file}.ogg")
+                    )
+                    player = pygame.mixer.music
+                    await load
+                # player.play()
+                ## OS players (needs installation)
+                # os.system(f"mpg123 {audio.mp3}")
+                # os.system(f"mpg321 {audio.mp3}")
+                # os.system(f"play -t mp3 {audio.mp3}")
         #  return chapter_contents
 
 
