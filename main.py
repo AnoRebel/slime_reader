@@ -17,14 +17,14 @@ def get_key(a_dict: Dict[str, str], val: str) -> str:
 
     Parameters
     ----------
-        a_dict: Dict[str, str]
+        a_dict: `Dict[str, str]`
             The dictionary to use
-        val: str
+        val: `str`
             The value used to get key from given Dictionary
 
     Returns
     -------
-        key: str
+        key: `str`
             The key from the given value in the Dictionary
     """
     key_list = list(a_dict.keys())
@@ -42,36 +42,35 @@ def get_index(a_list: List[str], curr: str) -> int:
 
     Parameters
     ----------
-        a_list: List[str]
+        a_list: `List[str]`
             The list to use
-        curr: str
+        curr: `str`
             The value used to get postion in list
 
     Returns
     -------
-        pos: int
+        pos: `int`
             The position of value in list + 1
             If not found, 0
     """
     try:
         idx = a_list.index(curr)
-        pos = int(idx) + 1
-        return pos
+        return int(idx) + 1
     except ValueError:
         return 0
 
 
 def asyncinit(cls):
     """
-    Using this function as a decorator allows you to define async __init__.
+    Using this function as a decorator allows you to define async `__init__`.
     So you can create objects by `await MyClass(params)`
 
     NOTE:
-    A slight caveat with this is you need to override the __new__ method
+    A slight caveat with this is you need to override the `__new__` method
 
     Example usage:
 
-    `py
+    ```py
     @asyncinit
     class Foo(object):
         def __new__(cls):
@@ -82,7 +81,7 @@ def asyncinit(cls):
         async def __init__(self, bar):
             self.bar = bar
             print(f"It's ALIVE: {bar}")
-    `
+    ```
     """
 
     __new__ = cls.__new__
@@ -93,8 +92,7 @@ def asyncinit(cls):
 
     def new(cls, *arg, **kwarg):
         obj = __new__(cls, *arg, **kwarg)
-        coro = init(obj, *arg, **kwarg)
-        return coro
+        return init(obj, *arg, **kwarg)
 
     cls.__new__ = new
     return cls
@@ -102,7 +100,7 @@ def asyncinit(cls):
 
 class AsyncObject:
     """
-    Inheriting this class allows you to define an async __init__.
+    Inheriting this class allows you to define an async `__init__`.
     So you can create objects by doing something like `await MyClass(params)`
     """
 
@@ -117,43 +115,43 @@ class AsyncObject:
 
 class Tensura(AsyncObject):
     """
-    Tensura object, inheriting the AsyncObject class to enable async __init__
+    Tensura class, inheriting the AsyncObject class to enable async `__init__`
     This class loads a link(depending on passed param), crawls it
     And optionally reads to you either online or offline
 
     Attributes
     ----------
-    local: bool
+    local: `bool`
         either use local reader(pyttsx3 or VLC) or online(gTTS) reader
-    alt: bool (Default: False)
+    alt: `bool` (Default: False)
         Use https://readnovelfull.com if true, else https://novelsonline.net
 
     Methods
     -------
-    async crawl(link=None):
+    `async crawl(link=None)`:
         Crawls the provided link, fills some global variable and returns the
         content
-    async read(text: str):
+    `async read(text: str)`:
         Reads the given text using either gTTS or local
-    async load_next():
-        Load the next chapter but dont read it
-    async next():
+    `async load_next()`:
+        Load the next chapter but don't read it
+    `async next()`:
         Set the next chapter and read(optional)
-    async load_prev():
-        Load the previous chapter but dont read it
-    async prev():
+    `async load_prev()`:
+        Load the previous chapter but don't read it
+    `async prev()`:
         Set the previous chapter and read(optional)
-    async goto(chapter: int):
+    `async goto(chapter: int)`:
         Go to the given chapter number for the site that supports it
-    progress():
+    `progress()`:
         Returns the current progress of your reading
-    play():
+    `play()`:
         Using the configured player, play the current chapter
-    pause():
+    `pause()`:
         Using the configured player, pause the reading
-    unpause():
+    `unpause()`:
         Using the configured player, play the paused reading
-    stop():
+    `stop()`:
         Using the configured player, stop playing
     """
 
@@ -197,21 +195,25 @@ class Tensura(AsyncObject):
 
     async def crawl(self, link=None) -> str:
         """
-        Crawls the provided link or th default link(firs chapter)
+        Crawls the provided link or the default link(firs chapter)
 
         Parameters
         ----------
-        link : str, optional
+        link : `str, optional`
             The link to the current chapter to be read
-            If None, loads the first chapter (default is None)
+            If `None`, loads the first chapter (default is `None`)
 
         Returns
         -------
-        chapter_content: str
+        chapter_content: `str`
             The crawled chapter contents
         """
         self.current_chapter = (
-            link if link is not None else self.BASE_URL_ALT if self.alt else self.BASE_URL
+            link
+            if link is not None
+            else self.BASE_URL_ALT
+            if self.alt
+            else self.BASE_URL
         )
         async with self.session.get(self.current_chapter) as resp:
             if resp.status == 200:
@@ -226,15 +228,17 @@ class Tensura(AsyncObject):
                     nav_next_part = soup.find("a", id="next_chap").get("href", "")
                     nav_prev_part = soup.find("a", id="prev_chap").get("href", "")
                     self.nav_next = (
-                        f"{ORIGIN_ALT}{nav_next_part}" if nav_next_part != "" else ""
+                        f"{self.ORIGIN_ALT}{nav_next_part}"
+                        if nav_next_part != ""
+                        else ""
                     )
                     self.nav_prev = (
-                        f"{ORIGIN_ALT}{nav_prev_part}" if nav_prev_part != "" else ""
+                        f"{self.ORIGIN_ALT}{nav_prev_part}"
+                        if nav_prev_part != ""
+                        else ""
                     )
 
                     raw_chapter_contents = soup.find("div", id="chr-content")
-                    chapter_contents = raw_chapter_contents.get_text()
-                    return chapter_contents
                 else:
                     content = await resp.text()
                     # content = resp.text # httpx
@@ -264,11 +268,10 @@ class Tensura(AsyncObject):
                         self.chapters[self.chapter_names[i]] = self.chapter_links[i]
 
                     raw_chapter_contents = soup.find(id="contentall")
-                    # Remove unneccessary contents
+                    # Remove unnecessary contents
                     raw_chapter_contents.find(class_="row").decompose()
                     raw_chapter_contents.find("noscript").decompose()
-                    chapter_contents = raw_chapter_contents.get_text()
-                    return chapter_contents
+                return raw_chapter_contents.get_text()
             else:
                 self.error = True
                 print(f"{resp.status}: Couldn't load chapter!")
@@ -280,12 +283,12 @@ class Tensura(AsyncObject):
 
         Parameters
         ----------
-        text : str
+        text : `str`
             Text to be read aloud
 
         Returns
         -------
-        None
+        `None`
         """
         if self.local:
             self.player = pyttsx3.init()
@@ -321,14 +324,14 @@ class Tensura(AsyncObject):
             # os.system(f"mpg321 {audio.mp3}")
             # os.system(f"play -t mp3 {audio.mp3}")
 
-    async def load_next(self):
+    async def load_next(self) -> asyncio.Task:
         """
         Crawls the next chapter but does not read it.
-        Await self.next() to read it.
+        Await `self.next()` to read it.
 
         Returns
         -------
-        AsyncTask: asyncio.Task
+        Task: `Future`
             The task to be awaited
         """
         chapter = asyncio.create_task(self.crawl(self.next_chapter))
@@ -341,19 +344,19 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         self.current_chapter_contents = await self.load_next()
         asyncio.create_task(self.read(self.current_chapter_contents))
 
-    async def load_prev(self):
+    async def load_prev(self) -> asyncio.Task:
         """
         Crawls the previous chapter but does not read it.
-        Await self.prev() to read it
+        Await `self.prev()` to read it
 
         Returns
         -------
-        AsyncTask: asyncio.Task
+        Task: `Future`
             The task to be awaited
         """
         chapter = asyncio.create_task(self.crawl(self.previous_chapter))
@@ -366,7 +369,7 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         self.current_chapter_contents = await self.load_prev()
         asyncio.create_task(self.read(self.current_chapter_contents))
@@ -377,12 +380,12 @@ class Tensura(AsyncObject):
 
         Parameters
         ----------
-        chapter : int
+        chapter : `int`
             The chapter to crawl for reading
 
         Returns
         -------
-        None
+        `None`
         """
         if len(self.chapter_links) > 0:
             link = self.chapter_links[chapter - 1]
@@ -400,7 +403,7 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         if len(self.chapter_links) > 0:
             print(
@@ -421,7 +424,7 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         if self.player is not None:
             self.player.play()
@@ -432,7 +435,7 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         if self.player is not None:
             self.player.pause()
@@ -443,7 +446,7 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         if self.player is not None:
             try:
@@ -457,7 +460,7 @@ class Tensura(AsyncObject):
 
         Returns
         -------
-        None
+        `None`
         """
         if self.player is not None:
             self.player.stop()
@@ -469,12 +472,12 @@ async def test(local: bool = True) -> None:
 
     Parameters
     ----------
-    local: bool
-        Whether to use offline(local) reader or online reader (default: True)
+    local: `bool`
+        Whether to use offline(local) reader or online reader (default: `True`)
 
     Returns
     -------
-    None
+    `None`
     """
     ORIGIN = "https://novelsonline.net"
     ORIGIN_ALT = "https://readnovelfull.com"
@@ -518,6 +521,7 @@ async def test(local: bool = True) -> None:
                     player = vlc.MediaPlayer(f"{audio_file}.mp3")
                 except ImportError:
                     from pydub import AudioSegment
+
                     pygame.mixer.init()
 
                     AudioSegment.from_mp3(f"{audio_file}.mp3").export(
@@ -549,42 +553,41 @@ async def test(local: bool = True) -> None:
         chapter_contents = raw_chapter_contents.get_text()
         print(chapter_contents)
         if local:
-                player = pyttsx3.init()
-                # I like a female voice
-                player.setProperty("voice", "english+f3")
-                player.setProperty("rate", 180)
-                player.say(chapter_contents)
-                task = asyncio.create_task(player.runAndWait())
-                # await task
-            else:
-                audio_file = uuid4().hex
-                if os.path.exists(f"{audio_file}.mp3"):
-                    os.remove(f"{audio_file}.mp3")
-                if os.path.exists(f"{audio_file}.ogg"):
-                    os.remove(f"{audio_file}.ogg")
-                tts = gTTS(text=chapter_contents, lang="en")
-                tts.save(f"{audio_file}.mp3")
-                try:
-                    import vlc
+            player = pyttsx3.init()
+            # I like a female voice
+            player.setProperty("voice", "english+f3")
+            player.setProperty("rate", 180)
+            player.say(chapter_contents)
+            task = asyncio.create_task(player.runAndWait())
+            # await task
+        else:
+            audio_file = uuid4().hex
+            if os.path.exists(f"{audio_file}.mp3"):
+                os.remove(f"{audio_file}.mp3")
+            if os.path.exists(f"{audio_file}.ogg"):
+                os.remove(f"{audio_file}.ogg")
+            tts = gTTS(text=chapter_contents, lang="en")
+            tts.save(f"{audio_file}.mp3")
+            try:
+                import vlc
 
-                    player = vlc.MediaPlayer(f"{audio_file}.mp3")
-                except ImportError:
-                    from pydub import AudioSegment
-                    pygame.mixer.init()
+                player = vlc.MediaPlayer(f"{audio_file}.mp3")
+            except ImportError:
+                from pydub import AudioSegment
 
-                    AudioSegment.from_mp3(f"{audio_file}.mp3").export(
-                        f"{audio_file}.ogg", format="ogg"
-                    )
-                    load = asyncio.create_task(
-                        pygame.mixer.music.load(f"{audio_file}.ogg")
-                    )
-                    player = pygame.mixer.music
-                    await load
-                # player.play()
-                ## OS players (needs installation)
-                # os.system(f"mpg123 {audio.mp3}")
-                # os.system(f"mpg321 {audio.mp3}")
-                # os.system(f"play -t mp3 {audio.mp3}")
+                pygame.mixer.init()
+
+                AudioSegment.from_mp3(f"{audio_file}.mp3").export(
+                    f"{audio_file}.ogg", format="ogg"
+                )
+                load = asyncio.create_task(pygame.mixer.music.load(f"{audio_file}.ogg"))
+                player = pygame.mixer.music
+                await load
+            # player.play()
+            ## OS players (needs installation)
+            # os.system(f"mpg123 {audio.mp3}")
+            # os.system(f"mpg321 {audio.mp3}")
+            # os.system(f"play -t mp3 {audio.mp3}")
         #  return chapter_contents
 
 
