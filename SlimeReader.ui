@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InitialScreen</class>
+ <widget class="QMainWindow" name="InitialScreen">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>640</width>
+    <height>360</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>640</width>
+    <height>360</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>640</width>
+    <height>360</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Tensura</string>
+  </property>
+  <property name="toolTip">
+   <string>Online/Oflline Tensura Reader</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>48</width>
+    <height>48</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>640</width>
+     <height>360</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>640</width>
+     <height>360</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>640</width>
+     <height>360</height>
+    </size>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>632</width>
+        <height>352</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>632</width>
+        <height>352</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>632</width>
+        <height>352</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame {
+	border-radius: 6px;
+	background-image: url(:/tensura.jpg);
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>621</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>mononoki NF</family>
+         <pointsize>48</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+	color: rgb(85, 255, 255);
+	background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>TENSURA</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="online">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>180</y>
+         <width>171</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>FiraMono NF</family>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Read using Google online TTS</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: transparent;
+color: rgb(85, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string>Online Reader</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="offline">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>220</y>
+         <width>181</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>FiraMono NF</family>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Read with offline tools(Requires some installations)</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: transparent;
+color: rgb(85, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string>Offline Reader</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="site_select">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>200</y>
+         <width>181</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>FiraMono NF</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Choose site to read from..</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(20, 20, 20, 120);
+color: rgb(85, 255, 255);
+border-radius: 6px;</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>NovelFull.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>NovelsOnline.net</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QPushButton" name="ok_btn">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>270</y>
+         <width>131</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>JetBrainsMonoMedium NF</family>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Start reading your the light novel</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius: 6px;
+background-color: rgb(85, 255, 255);
+color: rgb(20, 20, 20);</string>
+       </property>
+       <property name="text">
+        <string>Enter Tempest</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="exit_btn">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>270</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>JetBrainsMonoMedium NF</family>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Exit application</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius: 6px;
+background-color: rgb(244, 164, 173);
+color: rgb(20, 20, 20);</string>
+       </property>
+       <property name="text">
+        <string>Exit To Milim</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="tensura.qrc"/>
+ </resources>
+ <connections/>
+</ui>
