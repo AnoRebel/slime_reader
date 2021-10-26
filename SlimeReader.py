@@ -30,7 +30,7 @@ class SlimeReader(QtWidgets.QMainWindow):
         self.frame.setStyleSheet(
             "QFrame {\n"
             "    border-radius: 6px;\n"
-            "    background-image: url(tensura.jpg);\n"
+            "    background-image: url(assets/tensura.jpg);\n"
             "}"
         )
 

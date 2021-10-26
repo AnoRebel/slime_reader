@@ -113,7 +113,7 @@
       <property name="styleSheet">
        <string notr="true">QFrame {
 	border-radius: 6px;
-	background-image: url(:/tensura.jpg);
+	background-image: url(:/assets/tensura.jpg);
 }</string>
       </property>
       <property name="frameShape">
