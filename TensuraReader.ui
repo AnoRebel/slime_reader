@@ -13,82 +13,50 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(20, 20, 20);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="read_btn">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>40</y>
-      <width>90</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Read</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="next_btn">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>120</y>
-      <width>90</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Load Next</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="prev_btn">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>200</y>
-      <width>101</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Load Previous</string>
-    </property>
-   </widget>
-   <widget class="QScrollArea" name="read_area">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>70</y>
-      <width>511</width>
-      <height>451</height>
-     </rect>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>509</width>
-       <height>449</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="toggleplay_btn">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>270</y>
-      <width>90</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Load</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="prev_btn">
+        <property name="text">
+         <string>Load Previous</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="next_btn">
+        <property name="text">
+         <string>Load Next</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QComboBox" name="comboBox"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="read_btn">
+        <property name="text">
+         <string>Read</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -103,7 +71,8 @@
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="action_Change_Site"/>
+    <addaction name="action_Restart"/>
+    <addaction name="action_LoadLink"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
@@ -117,9 +86,9 @@
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_Change_Site">
+  <action name="action_Restart">
    <property name="text">
-    <string>&amp;Change Site</string>
+    <string>&amp;Restart</string>
    </property>
    <property name="toolTip">
     <string>Change Reading Site</string>
@@ -145,6 +114,11 @@
    </property>
    <property name="toolTip">
     <string>About Application</string>
+   </property>
+  </action>
+  <action name="action_LoadLink">
+   <property name="text">
+    <string>&amp;Load Link</string>
    </property>
   </action>
  </widget>

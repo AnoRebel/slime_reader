@@ -1,28 +1,45 @@
 import sys
 
-# if "PyQt5" in sys.modules:
-#    # PyQt5
-from PyQt5 import QtGui, QtWidgets, QtCore, uic
-from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+try:
+    from PyQt5 import QtGui, QtWidgets, QtCore, uic
+except ImportError:
+    from PySide2 import QtGui, QtWidgets, QtCore
 
-# else:
-#    # PySide2
-#    from PySide2 import QtGui, QtWidgets, QtCore
-#    from PySide2.QtCore import Signal, Slot
+from Tensura import Tensura
 
-# from Tensura import Tensura
 URL = 1
 ALT = True
 
 
 class TensuraReader(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         uic.loadUi("TensuraReader.ui", self)
+        #  self.reader = await Tensura()
+        self.connectSignals()
+        self.statusbar.showMessage("Launched.", 2000)
+
+    def connectSignals(self) -> None:
+        self.action_Restart.triggered.connect(restart)
+        self.action_Quit.triggered.connect(self.close)
+        self.action_LoadLink.triggered.connect(self.loadLink)
+        #  self.action_About.triggered.connect()
+
+    def loadLink(self) -> None:
+        dlg = ChapterLink()
+        dlg.show()
+
+
+class ChapterLink(QtWidgets.QDialog):
+    def __init__(self) -> None:
+        super().__init__()
+        uic.loadUi("ChapterLink.ui", self)
+        self.cancel_dialog_btn.clicked.connect(self.close)
+        #  self.load_chapter_btn.clicked.connect()
 
 
 class SlimeReader(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         uic.loadUi("SlimeReader.ui", self)
 
@@ -51,7 +68,7 @@ class SlimeReader(QtWidgets.QMainWindow):
         self.exit_btn.clicked.connect(exit)
         self.ok_btn.clicked.connect(self.on_ok)
 
-    def on_ok(self):
+    def on_ok(self) -> None:
         global URL, ALT
         URL = self.site_select.currentIndex()
         ALT = (
@@ -62,6 +79,11 @@ class SlimeReader(QtWidgets.QMainWindow):
         self.main = TensuraReader()
         self.close()
         self.main.show()
+
+
+def restart() -> None:
+    QtCore.QCoreApplication.quit()
+    QtCore.QProcess.startDetached(sys.executable, sys.argv)
 
 
 if __name__ == "__main__":
