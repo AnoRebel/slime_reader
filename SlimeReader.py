@@ -11,6 +11,39 @@ URL = 1
 ALT = True
 
 
+class ChapterLink(QtWidgets.QDialog):
+    def __init__(self) -> None:
+        super().__init__()
+        uic.loadUi("ChapterLink.ui", self)
+
+        # Remove Titlebar
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+
+        # Connect signals to slots
+        self.cancel_dialog_btn.clicked.connect(self.close)
+        #  self.load_chapter_btn.clicked.connect()
+
+
+class AboutDialog(QtWidgets.QDialog):
+    def __init__(self) -> None:
+        super().__init__()
+        uic.loadUi("AboutDialog.ui", self)
+
+        # Remove Titlebar
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+
+        # DropShadow Effect
+        self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
+        self.shadow.setBlurRadius(20)
+        self.shadow.setXOffset(0)
+        self.shadow.setYOffset(0)
+        self.shadow.setColor(QtGui.QColor(0, 0, 0, 60))
+        self.frame.setGraphicsEffect(self.shadow)
+
+        # Connect signals to slots
+        self.dismiss_btn.clicked.connect(self.close)
+
+
 class TensuraReader(QtWidgets.QMainWindow):
     def __init__(self) -> None:
         super().__init__()
@@ -23,19 +56,17 @@ class TensuraReader(QtWidgets.QMainWindow):
         self.action_Restart.triggered.connect(restart)
         self.action_Quit.triggered.connect(self.close)
         self.action_LoadLink.triggered.connect(self.loadLink)
-        #  self.action_About.triggered.connect()
+        self.action_About.triggered.connect(self.openAbout)
 
+    @QtCore.pyqtSlot()
     def loadLink(self) -> None:
-        dlg = ChapterLink()
-        dlg.show()
+        self.dlg = ChapterLink()
+        self.dlg.show()
 
-
-class ChapterLink(QtWidgets.QDialog):
-    def __init__(self) -> None:
-        super().__init__()
-        uic.loadUi("ChapterLink.ui", self)
-        self.cancel_dialog_btn.clicked.connect(self.close)
-        #  self.load_chapter_btn.clicked.connect()
+    @QtCore.pyqtSlot()
+    def openAbout(self) -> None:
+        self.about = AboutDialog()
+        self.about.show()
 
 
 class SlimeReader(QtWidgets.QMainWindow):
@@ -47,6 +78,7 @@ class SlimeReader(QtWidgets.QMainWindow):
         self.frame.setStyleSheet(
             "QFrame {\n"
             "    border-radius: 6px;\n"
+            "    background-color: rgb(20, 20, 20);\n"
             "    background-image: url(assets/tensura.jpg);\n"
             "}"
         )
@@ -65,9 +97,10 @@ class SlimeReader(QtWidgets.QMainWindow):
 
         # Connect the buttons to functions
         self.online.setChecked(True)
-        self.exit_btn.clicked.connect(exit)
+        self.exit_btn.clicked.connect(self.close)
         self.ok_btn.clicked.connect(self.on_ok)
 
+    @QtCore.pyqtSlot()
     def on_ok(self) -> None:
         global URL, ALT
         URL = self.site_select.currentIndex()

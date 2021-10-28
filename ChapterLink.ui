@@ -18,7 +18,8 @@
     <normaloff>assets/bg-icon.png</normaloff>assets/bg-icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(20, 20, 20);</string>
+   <string notr="true">border-radius: 6px;
+background-color: rgb(20, 20, 20);</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -55,11 +56,29 @@
       </spacer>
      </item>
      <item>
+      <spacer name="verticalSpacer_6">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
          <family>DroidSansMono NF</family>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">margin: 0 6px;
+color: #ECECEC;
+background-color: transparent;</string>
        </property>
        <property name="text">
         <string>Enter Chapter Link:</string>
@@ -90,8 +109,14 @@
         <string/>
        </property>
        <property name="styleSheet">
-        <string notr="true">padding: 6px;
-margin: 0 6px;</string>
+        <string notr="true">QLineEdit {
+	padding: 6px;
+	margin: 0 6px;
+	color: #ECECEC;
+	border: 0.5px solid #ECECEC;
+	border-radius: 4px;
+	background-color: transparent;
+}</string>
        </property>
        <property name="inputMask">
         <string/>
@@ -103,6 +128,19 @@ margin: 0 6px;</string>
         <string>Enter chapter link from one of the available sources...</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <spacer name="verticalSpacer">
@@ -184,11 +222,17 @@ color: rgb(20, 20, 20);</string>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-radius: 4px;
-padding: 6px 18px;
-margin-right: 6px;
-background-color: rgb(85, 255, 255);
-color: rgb(20, 20, 20);</string>
+          <string notr="true">QPushButton {
+	border-radius: 4px;
+	padding: 6px 18px;
+	margin-right: 6px;
+	background-color: rgba(85, 255, 255, 190);
+	color: rgb(20, 20, 20);
+}
+
+QPushButton:hover {
+	background-color: rgb(85, 255, 255);
+}</string>
          </property>
          <property name="text">
           <string>Load</string>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>200</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>400</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>400</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Tensura Reader - About</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="tensura.qrc">
+    <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">border-radius: 6px;
+background-color: rgb(20, 20, 20);</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>392</width>
+       <height>192</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>392</width>
+       <height>192</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>392</width>
+       <height>192</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QFrame{
+	color: #ECECEC;
+	border-radius: 6px;
+	background-color: rgb(20, 20, 20);
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="app_image">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>10</y>
+        <width>121</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 6px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="tensura.qrc">:/assets/rimuru.jpeg</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="dismiss_btn">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>150</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>DroidSansMono NF</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+	background-color: rgba(85, 255, 255, 160);
+	border-radius: 4px;
+	color: #141414;
+}
+QPushButton:hover {
+	background-color: rgba(85, 255, 255, 190);
+}</string>
+      </property>
+      <property name="text">
+       <string>Ok</string>
+      </property>
+      <property name="icon">
+       <iconset resource="tensura.qrc">
+        <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+      </property>
+     </widget>
+     <widget class="QLabel" name="app_name">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Lato Heavy</family>
+        <pointsize>16</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(85, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Tensura Reader</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="app_description">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>221</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>DroidSansMono NF</family>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel:hover {
+	color: rgb(85, 255, 255);
+}</string>
+      </property>
+      <property name="text">
+       <string>A simple GUI for the Tensura script I created to scrape and read for me Tensura(since I'm too lazy)</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="tensura.qrc"/>
+ </resources>
+ <connections/>
+</ui>

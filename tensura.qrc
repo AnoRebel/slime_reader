@@ -1,5 +1,9 @@
 <RCC>
   <qresource>
+    <file>assets/tempest.jpg</file>
+    <file>assets/logo.jpeg</file>
+    <file>assets/bg-icon.png</file>
+    <file>assets/rimuru.jpeg</file>
     <file>assets/tensura.jpg</file>
   </qresource>
 </RCC>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>tensura</class>
- <widget class="QMainWindow" name="tensura">
+ <class>TensuraReader</class>
+ <widget class="QMainWindow" name="TensuraReader">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>829</width>
     <height>600</height>
    </rect>
   </property>
@@ -17,57 +17,40 @@
    <string notr="true">background-color: rgb(20, 20, 20);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <layout class="QGridLayout" name="gridLayout">
-      <property name="spacing">
-       <number>10</number>
-      </property>
-      <item row="0" column="4">
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Load</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="prev_btn">
-        <property name="text">
-         <string>Load Previous</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QPushButton" name="next_btn">
-        <property name="text">
-         <string>Load Next</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QComboBox" name="comboBox"/>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="read_btn">
-        <property name="text">
-         <string>Read</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-   </layout>
+   <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>22</height>
+     <width>829</width>
+     <height>23</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>JetBrainsMono NF</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QMenuBar {
+	color: #ECECEC;
+}</string>
+   </property>
    <widget class="QMenu" name="menuMenu">
+    <property name="font">
+     <font>
+      <family>JetBrainsMono NF</family>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QMenu {
+	color: #ECECEC;
+}</string>
+    </property>
     <property name="title">
      <string>Menu</string>
     </property>
@@ -77,6 +60,21 @@
     <addaction name="action_Quit"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
+    <property name="font">
+     <font>
+      <family>JetBrainsMono NF</family>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QMenu {
+	color: #ECECEC;
+}
+
+QMenu:hover {
+	color: #141414;
+	background-color: rgb(85, 255, 255);
+}</string>
+    </property>
     <property name="title">
      <string>Help</string>
     </property>
@@ -87,6 +85,9 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Restart">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Restart</string>
    </property>
@@ -120,8 +121,13 @@
    <property name="text">
     <string>&amp;Load Link</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="tensura.qrc"/>
+ </resources>
  <connections/>
 </ui>
