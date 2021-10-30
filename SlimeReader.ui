@@ -295,7 +295,7 @@ QPushButton:hover {
         <rect>
          <x>150</x>
          <y>270</y>
-         <width>141</width>
+         <width>151</width>
          <height>41</height>
         </rect>
        </property>
@@ -321,6 +321,10 @@ QPushButton:hover {
        </property>
        <property name="text">
         <string>Exit To Milim</string>
+       </property>
+       <property name="icon">
+        <iconset resource="tensura.qrc">
+         <normaloff>:/assets/exit.jpeg</normaloff>:/assets/exit.jpeg</iconset>
        </property>
       </widget>
      </widget>

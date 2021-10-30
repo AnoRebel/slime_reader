@@ -237,6 +237,10 @@ QPushButton:hover {
          <property name="text">
           <string>Load</string>
          </property>
+         <property name="icon">
+          <iconset resource="tensura.qrc">
+           <normaloff>:/assets/load.jpeg</normaloff>:/assets/load.jpeg</iconset>
+         </property>
         </widget>
        </item>
       </layout>
@@ -258,6 +262,8 @@ QPushButton:hover {
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="tensura.qrc"/>
+ </resources>
  <connections/>
 </ui>

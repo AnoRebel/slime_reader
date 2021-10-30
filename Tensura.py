@@ -8,7 +8,9 @@ from gtts import gTTS
 from uuid import uuid4
 from bs4 import BeautifulSoup
 from blessings import Terminal
-from typing import Dict, List
+from rich.traceback import install
+from typing import Dict, List, Optional
+install()
 
 
 def get_key(a_dict: Dict[str, str], val: str) -> str:
@@ -18,7 +20,7 @@ def get_key(a_dict: Dict[str, str], val: str) -> str:
     Parameters
     ----------
         a_dict: `Dict[str, str]`
-            The dictionary to use
+    The dictionary to use
         val: `str`
             The value used to get key from given Dictionary
 
@@ -397,13 +399,13 @@ class Tensura(AsyncObject):
             )
             self.read("This site doesn't provide a scrapable chapter list!")
 
-    def progress(self) -> None:
+    def progress(self) -> Optional[str]:
         """
         Prints out and reads aloud the current progress/chapter being read.
 
         Returns
         -------
-        `None`
+        `String or None`
         """
         if len(self.chapter_links) > 0:
             print(
@@ -412,11 +414,13 @@ class Tensura(AsyncObject):
             self.read(
                 f"Reading chapter {get_index(self.chapter_links, self.current_chapter)} of {len(self.chapter_links)}, named {get_key(self.chapters, self.current_chapter)}"
             )
+            return f"Reading chapter {get_index(self.chapter_links, self.current_chapter)} of {len(self.chapter_links)}, named {get_key(self.chapters, self.current_chapter)}"
         else:
             print(
                 f"{self.term.bold}Reading {self.term.green_on_black(self.chapter_title)} {self.term.normal}"
             )
             self.read(f"Reading {self.chapter_title}")
+            return f"Reading {self.chapter_title}"
 
     def play(self) -> None:
         """

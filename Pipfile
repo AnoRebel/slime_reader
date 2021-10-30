@@ -20,6 +20,7 @@ blessings = "*"
 httpx = {extras = ["http2"], version = "*"}
 pyqt5 = "*"
 pyqt5-tools = "*"
+rich = "*"
 
 [dev-packages]
 

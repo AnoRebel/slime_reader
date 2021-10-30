@@ -1,14 +1,64 @@
 import sys
+import time
+import asyncio
+import threading
 
 try:
     from PyQt5 import QtGui, QtWidgets, QtCore, uic
 except ImportError:
     from PySide2 import QtGui, QtWidgets, QtCore
 
+from rich.traceback import install
 from Tensura import Tensura
+
+install()
 
 URL = 1
 ALT = True
+
+
+class setInterval:
+    """
+    A python version of a setInterval class that allows running functions at an
+    interval and cancelling them
+
+    Attributes
+    ----------
+    interval: `float`
+        The time interval in seconds to rerun the given action
+    action: `Function`
+        An action to be run and rerun after given seconds interval
+
+    Usage
+    -----
+    `py
+    interval = setInterval(seconds, function)
+    t = threading.Timer(seconds, inter.cancel)
+    t.start()
+    `
+    """
+
+    def __init__(self, interval, action) -> None:
+        self.interval = interval
+        self.action = action
+        self.stopEvent = threading.Event()
+        thread = threading.Thread(target=self.__setInterval)
+        thread.start()
+
+    def __setInterval(self) -> None:
+        """
+        Custom method to run a function every given seconds
+        """
+        nextTime = time.time() + self.interval
+        while not self.stopEvent.wait(nextTime - time.time()):
+            nextTime += self.interval
+            self.action()
+
+    def cancel(self) -> None:
+        """
+        Stops the current running loop
+        """
+        self.stopEvent.set()
 
 
 class ChapterLink(QtWidgets.QDialog):
@@ -22,6 +72,11 @@ class ChapterLink(QtWidgets.QDialog):
         # Connect signals to slots
         self.cancel_dialog_btn.clicked.connect(self.close)
         #  self.load_chapter_btn.clicked.connect()
+
+        @QtCore.pyqtSlot()
+        def loadChapter(self) -> None:
+            #  tmp = self.linkInput
+            pass
 
 
 class AboutDialog(QtWidgets.QDialog):
@@ -53,10 +108,25 @@ class TensuraReader(QtWidgets.QMainWindow):
         self.statusbar.showMessage("Launched.", 2000)
 
     def connectSignals(self) -> None:
+        # Actions
         self.action_Restart.triggered.connect(restart)
         self.action_Quit.triggered.connect(self.close)
         self.action_LoadLink.triggered.connect(self.loadLink)
         self.action_About.triggered.connect(self.openAbout)
+        # Buttons
+        self.load_btn.clicked.connect(self.loadChapter)
+        self.prev_btn.clicked.connect(self.on_prev)
+        self.toggle_play_btn.clicked.connect(self.togglePlayPause)
+        self.stop_btn.clicked.connect(self.on_stop)
+        self.next_btn.clicked.connect(self.on_next)
+
+    def configureChapterSelect(self) -> None:
+        #  self.chapter_select
+        pass
+
+    def configureChapterContent(self) -> None:
+        #  self.chapter_content
+        pass
 
     @QtCore.pyqtSlot()
     def loadLink(self) -> None:
@@ -67,6 +137,28 @@ class TensuraReader(QtWidgets.QMainWindow):
     def openAbout(self) -> None:
         self.about = AboutDialog()
         self.about.show()
+
+    @QtCore.pyqtSlot()
+    def loadChapter(self) -> None:
+        #  tmp = self.chapter_select
+        pass
+
+    @QtCore.pyqtSlot()
+    def on_prev(self) -> None:
+        pass
+
+    @QtCore.pyqtSlot()
+    def on_next(self) -> None:
+        pass
+
+    @QtCore.pyqtSlot()
+    def on_stop(self) -> None:
+        pass
+
+    @QtCore.pyqtSlot()
+    def togglePlayPause(self) -> None:
+        #  self.toggle_play_btn
+        pass
 
 
 class SlimeReader(QtWidgets.QMainWindow):
