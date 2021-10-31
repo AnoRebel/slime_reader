@@ -2,6 +2,8 @@ import sys
 import time
 import asyncio
 import threading
+#  from threading import Thread, Event
+import qasync
 
 try:
     from PyQt5 import QtGui, QtWidgets, QtCore, uic
