@@ -1,121 +1,25 @@
-import re, os
-import pyttsx3
-import pygame
 import asyncio
+import os
+import re
+from typing import Dict, List, Optional
+from uuid import uuid4
+
 import aiohttp
 import httpx
-from gtts import gTTS
-from uuid import uuid4
-from bs4 import BeautifulSoup
+import pygame
+import pyttsx3
 from blessings import Terminal
+from bs4 import BeautifulSoup
+from gtts import gTTS
+from rich import print
 from rich.traceback import install
-from typing import Dict, List, Optional
+
+from utils import AsyncObject
+
 install()
 
 
-def get_key(a_dict: Dict[str, str], val: str) -> str:
-    """
-    Returns a key from a value in a dictionary
-
-    Parameters
-    ----------
-        a_dict: `Dict[str, str]`
-    The dictionary to use
-        val: `str`
-            The value used to get key from given Dictionary
-
-    Returns
-    -------
-        key: `str`
-            The key from the given value in the Dictionary
-    """
-    key_list = list(a_dict.keys())
-    val_list = list(a_dict.values())
-    try:
-        position = val_list.index(val)
-        return key_list[position]
-    except ValueError:
-        return "Invalid Chapter!"
-
-
-def get_index(a_list: List[str], curr: str) -> int:
-    """
-    Returns the (index + 1) of a value in the given List
-
-    Parameters
-    ----------
-        a_list: `List[str]`
-            The list to use
-        curr: `str`
-            The value used to get postion in list
-
-    Returns
-    -------
-        pos: `int`
-            The position of value in list + 1
-            If not found, 0
-    """
-    try:
-        idx = a_list.index(curr)
-        return int(idx) + 1
-    except ValueError:
-        return 0
-
-
-def asyncinit(cls):
-    """
-    Using this function as a decorator allows you to define async `__init__`.
-    So you can create objects by `await MyClass(params)`
-
-    NOTE:
-    A slight caveat with this is you need to override the `__new__` method
-
-    Example usage:
-
-    ```py
-    @asyncinit
-    class Foo(object):
-        def __new__(cls):
-            # Do nothing. Just to make it work(for me atleast)
-            print(cls)
-            return super().__new__(cls)
-
-        async def __init__(self, bar):
-            self.bar = bar
-            print(f"It's ALIVE: {bar}")
-    ```
-    """
-
-    __new__ = cls.__new__
-
-    async def init(obj, *arg, **kwarg):
-        await obj.__init__(*arg, **kwarg)
-        return obj
-
-    def new(cls, *arg, **kwarg):
-        obj = __new__(cls, *arg, **kwarg)
-        return init(obj, *arg, **kwarg)
-
-    cls.__new__ = new
-    return cls
-
-
-class AsyncObject:
-    """
-    Inheriting this class allows you to define an async `__init__`.
-    So you can create objects by doing something like `await MyClass(params)`
-    """
-
-    async def __new__(cls, *arg, **kwarg):
-        instance = super().__new__(cls)
-        await instance.__init__(*arg, **kwarg)
-        return instance
-
-    async def __init__(self):
-        pass
-
-
-class Tensura(AsyncObject):
+class Tensura:
     """
     Tensura class, inheriting the AsyncObject class to enable async `__init__`
     This class loads a link(depending on passed param), crawls it
@@ -164,10 +68,10 @@ class Tensura(AsyncObject):
     BASE_URL = ORIGIN + "/tensei-shitara-slime-datta-ken-ln/volume-1/chapter-pr"
     BASE_URL_ALT = ORIGIN_ALT + "/tensei-shitara-slime-datta-ken/prologue.html"
     HEADERS = {
-        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.115 Safari/537.36"
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
     }
 
-    async def __init__(self, local: bool, alt: bool = False) -> None:
+    def __init__(self, local: bool, alt: bool = False) -> None:
         self.local: bool = local
         self.alt: bool = alt
         self.player = None
@@ -180,24 +84,28 @@ class Tensura(AsyncObject):
         self.chapter_title: str = ""
         self.chapter_links: List[str] = []
         self.chapter_names: List[str] = []
-        self.session: aiohttp.ClientSession = aiohttp.ClientSession(self.HEADERS)
         pygame.mixer.init()
-        self.current_chapter_contents = await self.crawl()
         self.error = False
 
     def __del__(self) -> None:
         pygame.mixer.music.unload()
         pygame.mixer.quit()
-        self.session.close()
+        closed = self.session.close()
         if os.path.exists(f"{self.audio_file}.mp3"):
             os.remove(f"{self.audio_file}.mp3")
         if os.path.exists(f"{self.audio_file}.ogg"):
             os.remove(f"{self.audio_file}.ogg")
         self.loop.close()
 
+    async def init(self):
+        self.session: aiohttp.ClientSession = aiohttp.ClientSession(
+            headers=self.HEADERS
+        )
+        self.current_chapter_contents = await self.crawl()
+
     async def crawl(self, link=None) -> str:
         """
-        Crawls the provided link or the default link(firs chapter)
+        Crawls the provided link or the default link(first chapter)
 
         Parameters
         ----------
@@ -271,8 +179,14 @@ class Tensura(AsyncObject):
 
                     raw_chapter_contents = soup.find(id="contentall")
                     # Remove unnecessary contents
-                    raw_chapter_contents.find(class_="row").decompose()
-                    raw_chapter_contents.find("noscript").decompose()
+                    try:
+                        raw_chapter_contents.find(class_="row").decompose()
+                    except AttributeError:
+                        pass
+                    try:
+                        raw_chapter_contents.find("noscript").decompose()
+                    except AttributeError:
+                        pass
                 return raw_chapter_contents.get_text()
             else:
                 self.error = True
@@ -336,7 +250,7 @@ class Tensura(AsyncObject):
         Task: `Future`
             The task to be awaited
         """
-        chapter = asyncio.create_task(self.crawl(self.next_chapter))
+        chapter = asyncio.create_task(self.crawl(self.nav_next))
         # self.current_chapter_contents = await chapter
         return chapter
 
@@ -361,7 +275,7 @@ class Tensura(AsyncObject):
         Task: `Future`
             The task to be awaited
         """
-        chapter = asyncio.create_task(self.crawl(self.previous_chapter))
+        chapter = asyncio.create_task(self.crawl(self.nav_prev))
         # self.current_chapter_contents = await chapter
         return chapter
 
@@ -488,11 +402,12 @@ async def test(local: bool = True) -> None:
     BASE_URL = ORIGIN + "/tensei-shitara-slime-datta-ken-ln/volume-1/chapter-pr"
     BASE_URL_ALT = ORIGIN_ALT + "/tensei-shitara-slime-datta-ken/prologue.html"
     HEADERS = {
-        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.115 Safari/537.36"
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
     }
     async with aiohttp.ClientSession(headers=HEADERS) as session:
-        async with session.get(BASE_URL_ALT) as res:
+        async with session.get(BASE_URL) as res:
             content = await res.text()
+            print(content)
             soup = BeautifulSoup(content, "lxml")
             chapter_title = soup.find("a", class_="chr-title").get("title", "")
             nav_next_part = soup.find("a", id="next_chap").get("href", "")

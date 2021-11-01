@@ -1,113 +1,110 @@
-import sys
-import time
 import asyncio
-import threading
+import sys
+
 #  from threading import Thread, Event
 import qasync
+from qasync import asyncSlot
+
+#  from qasync import asyncSlot, asyncClose, QApplication
 
 try:
-    from PyQt5 import QtGui, QtWidgets, QtCore, uic
+    #  from PyQt5 import QtGui, QtWidgets, QtCore, uic
+    from PyQt5.QtCore import QCoreApplication, QProcess, Qt
+    from PyQt5.QtCore import pyqtSignal as Signal
+    from PyQt5.QtCore import pyqtSlot as Slot
+    from PyQt5.QtGui import QColor
+    from PyQt5.QtWidgets import (
+        QApplication,
+        QDialog,
+        QMessageBox,
+        QGraphicsDropShadowEffect,
+        QMainWindow,
+    )
+    from PyQt5.uic import loadUi
 except ImportError:
-    from PySide2 import QtGui, QtWidgets, QtCore
+    #  from PySide2 import QtGui, QtWidgets, QtCore
+    from PySide2.QtWidgets import (
+        QDialog,
+        QMainWindow,
+        QMessageBox,
+        QGraphicsDropShadowEffect,
+        QApplication,
+    )
+    from PySide2.QtCore import (
+        pyqtSlot as Slot,
+        pyqtSignal as Signal,
+        Qt,
+        QCoreQCoreApplication,
+        QProcess,
+    )
+    from PySide2.QtGui import QColor
+    from PySide2.uic import loadUi
 
+from functools import partial
+from typing import Optional
 from rich.traceback import install
+
 from Tensura import Tensura
 
 install()
 
-URL = 1
-ALT = True
+LOCAL = True
+ALT = False
+APP: Optional[Tensura] = None
 
 
-class setInterval:
-    """
-    A python version of a setInterval class that allows running functions at an
-    interval and cancelling them
+class ChapterLink(QDialog):
+    loaded = Signal(str)
 
-    Attributes
-    ----------
-    interval: `float`
-        The time interval in seconds to rerun the given action
-    action: `Function`
-        An action to be run and rerun after given seconds interval
-
-    Usage
-    -----
-    `py
-    interval = setInterval(seconds, function)
-    t = threading.Timer(seconds, inter.cancel)
-    t.start()
-    `
-    """
-
-    def __init__(self, interval, action) -> None:
-        self.interval = interval
-        self.action = action
-        self.stopEvent = threading.Event()
-        thread = threading.Thread(target=self.__setInterval)
-        thread.start()
-
-    def __setInterval(self) -> None:
-        """
-        Custom method to run a function every given seconds
-        """
-        nextTime = time.time() + self.interval
-        while not self.stopEvent.wait(nextTime - time.time()):
-            nextTime += self.interval
-            self.action()
-
-    def cancel(self) -> None:
-        """
-        Stops the current running loop
-        """
-        self.stopEvent.set()
-
-
-class ChapterLink(QtWidgets.QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi("ChapterLink.ui", self)
+        loadUi("ChapterLink.ui", self)
 
         # Remove Titlebar
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.FramelessWindowHint)
 
         # Connect signals to slots
         self.cancel_dialog_btn.clicked.connect(self.close)
-        #  self.load_chapter_btn.clicked.connect()
+        self.load_chapter_btn.clicked.connect(self.loadChapter)
 
-        @QtCore.pyqtSlot()
-        def loadChapter(self) -> None:
-            #  tmp = self.linkInput
-            pass
+    def loadChapter(self) -> None:
+        link = self.linkInput.text()
+        self.loaded.emit(link)
+        self.close()
 
 
-class AboutDialog(QtWidgets.QDialog):
+class AboutDialog(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi("AboutDialog.ui", self)
+        loadUi("AboutDialog.ui", self)
 
         # Remove Titlebar
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.FramelessWindowHint)
 
         # DropShadow Effect
-        self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
+        self.shadow = QGraphicsDropShadowEffect(self)
         self.shadow.setBlurRadius(20)
         self.shadow.setXOffset(0)
         self.shadow.setYOffset(0)
-        self.shadow.setColor(QtGui.QColor(0, 0, 0, 60))
+        self.shadow.setColor(QColor(0, 0, 0, 60))
         self.frame.setGraphicsEffect(self.shadow)
 
         # Connect signals to slots
         self.dismiss_btn.clicked.connect(self.close)
 
 
-class TensuraReader(QtWidgets.QMainWindow):
-    def __init__(self) -> None:
+class TensuraReader(QMainWindow):
+    def __init__(self, local: bool, alt: bool) -> None:
         super().__init__()
-        uic.loadUi("TensuraReader.ui", self)
+        loadUi("TensuraReader.ui", self)
         #  self.reader = await Tensura()
         self.connectSignals()
-        self.statusbar.showMessage("Launched.", 2000)
+        self.local = local
+        self.alt = alt
+        #  self.statusbar.showMessage("Launched.", 2000)
+        self.statusbar.showMessage(f"{self.alt}: {self.local}")
+        global APP
+        APP = Tensura(local=self.local, alt=self.alt)
 
     def connectSignals(self) -> None:
         # Actions
@@ -123,50 +120,62 @@ class TensuraReader(QtWidgets.QMainWindow):
         self.next_btn.clicked.connect(self.on_next)
 
     def configureChapterSelect(self) -> None:
-        #  self.chapter_select
-        pass
+        if APP is not None:
+            if self.alt:
+                self.chapter_select.addItem("None Provided")
+                self.chapter_select.setFrame(False)
+            else:
+                self.chapter_select.addItems(APP.chapters)
 
     def configureChapterContent(self) -> None:
         #  self.chapter_content
         pass
 
-    @QtCore.pyqtSlot()
+    @asyncSlot(str)
+    async def linkLoaded(self, link):
+        if APP is not None:
+            await APP.crawl(link)
+            self.dlg.close()
+        else:
+            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+
     def loadLink(self) -> None:
         self.dlg = ChapterLink()
         self.dlg.show()
+        self.dlg.loaded.connect(self.linkLoaded)
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def openAbout(self) -> None:
         self.about = AboutDialog()
         self.about.show()
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def loadChapter(self) -> None:
         #  tmp = self.chapter_select
         pass
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def on_prev(self) -> None:
         pass
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def on_next(self) -> None:
         pass
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def on_stop(self) -> None:
         pass
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def togglePlayPause(self) -> None:
         #  self.toggle_play_btn
         pass
 
 
-class SlimeReader(QtWidgets.QMainWindow):
+class SlimeReader(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi("SlimeReader.ui", self)
+        loadUi("SlimeReader.ui", self)
 
         # Fix Bg Image
         self.frame.setStyleSheet(
@@ -178,15 +187,15 @@ class SlimeReader(QtWidgets.QMainWindow):
         )
 
         # Remove Titlebar
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
 
         # DropShadow Effect
-        self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
+        self.shadow = QGraphicsDropShadowEffect(self)
         self.shadow.setBlurRadius(20)
         self.shadow.setXOffset(0)
         self.shadow.setYOffset(0)
-        self.shadow.setColor(QtGui.QColor(0, 0, 0, 60))
+        self.shadow.setColor(QColor(0, 0, 0, 60))
         self.frame.setGraphicsEffect(self.shadow)
 
         # Connect the buttons to functions
@@ -194,27 +203,47 @@ class SlimeReader(QtWidgets.QMainWindow):
         self.exit_btn.clicked.connect(self.close)
         self.ok_btn.clicked.connect(self.on_ok)
 
-    @QtCore.pyqtSlot()
+    @Slot()
     def on_ok(self) -> None:
-        global URL, ALT
-        URL = self.site_select.currentIndex()
-        ALT = (
+        global LOCAL, ALT
+        ALT = self.site_select.currentIndex()
+        LOCAL = (
             True
             if (self.online.isChecked() and not self.offline.isChecked())
             else False
         )
-        self.main = TensuraReader()
+        self.main = TensuraReader(LOCAL, bool(ALT))
         self.close()
         self.main.show()
 
 
 def restart() -> None:
-    QtCore.QCoreApplication.quit()
-    QtCore.QProcess.startDetached(sys.executable, sys.argv)
+    QCoreApplication.quit()
+    QProcess.startDetached(sys.executable, sys.argv)
+
+
+async def main():
+    def close_future(future, loop):
+        loop.call_later(10, future.cancel)
+        future.cancel()
+
+    loop = asyncio.get_event_loop()
+    future = asyncio.Future()
+    app = QApplication.instance()
+    if hasattr(app, "aboutToQuit"):
+        getattr(app, "aboutToQuit").connect(partial(close_future, future, loop))
+    window = SlimeReader()
+    window.show()
+    await future
+    return True
 
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = SlimeReader()
     window.show()
     sys.exit(app.exec())
+    try:
+        qasync.run(main())
+    except asyncio.exceptions.CancelledError:
+        sys.exit(0)

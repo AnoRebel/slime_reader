@@ -10,20 +10,21 @@ lxml = "*"
 pyttsx3 = "*"
 gtts = "*"
 asyncio = "*"
-aiohttp = {extras = ["speedups"], version = "*"}
 cchardet = "*"
-aiodns = "*"
 pygame = "*"
 python-vlc = "*"
 pydub = "*"
 blessings = "*"
 httpx = {extras = ["http2"], version = "*"}
 pyqt5 = "*"
-pyqt5-tools = "*"
 rich = "*"
 qasync = "*"
+aiohttp = {extras = ["speedups"], version = "*"}
 
 [dev-packages]
+mypy = "*"
+pyqt5-stubs = "*"
+pydub-stubs = "*"
 
 [requires]
 python_version = "3.8"
