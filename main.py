@@ -9,8 +9,8 @@ install()
 async def main():
     tmp = Tensura(local=False)
     await tmp.init()
-    print(tmp.current_chapter_contents)
-    #  print(tmp.chapters)
+    #  print(tmp.current_chapter_contents)
+    print(tmp.chapters)
 
 
 if __name__ == "__main__":

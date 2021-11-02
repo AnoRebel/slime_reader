@@ -105,6 +105,19 @@ class TensuraReader(QMainWindow):
         self.statusbar.showMessage(f"{self.alt}: {self.local}")
         global APP
         APP = Tensura(local=self.local, alt=self.alt)
+        #  self.connectSignals()
+
+    async def init(self):
+        if APP is not None:
+            content = await APP.crawl()
+            if APP.error:
+                QMessageBox.critical(
+                    self, "App Error", "Failed to load chapter, please restart app!"
+                )
+            else:
+                self.chapter_content.setText(content)
+                if not self.alt:
+                    self.configureChapterSelect()
 
     def connectSignals(self) -> None:
         # Actions
@@ -122,19 +135,29 @@ class TensuraReader(QMainWindow):
     def configureChapterSelect(self) -> None:
         if APP is not None:
             if self.alt:
+                self.chapter_select.clear()
                 self.chapter_select.addItem("None Provided")
-                self.chapter_select.setFrame(False)
+                self.chapter_select.model().item(0).setEnabled(False)
+                #  self.chapter_select.setFrame(False)
             else:
-                self.chapter_select.addItems(APP.chapters)
+                self.chapter_select.clear()
+                self.chapter_select.addItems(list(APP.chapters.keys()))
 
-    def configureChapterContent(self) -> None:
-        #  self.chapter_content
-        pass
+    def setChapterContent(self, content: Optional[str] = None) -> None:
+        if APP is not None:
+            if APP.error:
+                QMessageBox.critical(self, "App Error", "Failed to load chapter.")
+                self.chapter_content.setText(APP.current_chapter_contents)
+            else:
+                self.chapter_content.setText(content)
+        else:
+            QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     @asyncSlot(str)
     async def linkLoaded(self, link):
         if APP is not None:
-            await APP.crawl(link)
+            content = await APP.crawl(link)
+            self.setChapterContent(content)
             self.dlg.close()
         else:
             QMessageBox.critical(self, "App Error", "App not initialized properly.")
@@ -149,27 +172,48 @@ class TensuraReader(QMainWindow):
         self.about = AboutDialog()
         self.about.show()
 
-    @Slot()
-    def loadChapter(self) -> None:
-        #  tmp = self.chapter_select
-        pass
+    @asyncSlot()
+    async def loadChapter(self) -> None:
+        if APP is not None:
+            key = self.chapter_select.currentText()
+            link = APP.chapters[key]
+            content = await APP.crawl(link)
+            self.setChapterContent(content)
+        else:
+            QMessageBox.critical(self, "App Error", "App not initialized properly")
+
+    @asyncSlot()
+    async def on_prev(self) -> None:
+        if APP is not None:
+            content = await APP.load_next()
+            if APP.error:
+                QMessageBox.critical(
+                    self, "App Error", "Failed to load previous chapter."
+                )
+                pass
+            else:
+                self.chapter_content.setText(content)
 
     @Slot()
-    def on_prev(self) -> None:
-        pass
-
-    @Slot()
-    def on_next(self) -> None:
-        pass
+    async def on_next(self) -> None:
+        if APP is not None:
+            content = await APP.load_prev()
+            if APP.error:
+                QMessageBox.critical(self, "App Error", "Failed to load next chapter.")
+                pass
+            else:
+                self.chapter_content.setText(content)
 
     @Slot()
     def on_stop(self) -> None:
-        pass
+        if APP is not None:
+            pass
 
     @Slot()
     def togglePlayPause(self) -> None:
-        #  self.toggle_play_btn
-        pass
+        if APP is not None:
+            #  self.toggle_play_btn
+            pass
 
 
 class SlimeReader(QMainWindow):
@@ -203,8 +247,8 @@ class SlimeReader(QMainWindow):
         self.exit_btn.clicked.connect(self.close)
         self.ok_btn.clicked.connect(self.on_ok)
 
-    @Slot()
-    def on_ok(self) -> None:
+    @asyncSlot()
+    async def on_ok(self) -> None:
         global LOCAL, ALT
         ALT = self.site_select.currentIndex()
         LOCAL = (
@@ -213,6 +257,7 @@ class SlimeReader(QMainWindow):
             else False
         )
         self.main = TensuraReader(LOCAL, bool(ALT))
+        #  await self.main.init()
         self.close()
         self.main.show()
 

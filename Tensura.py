@@ -14,7 +14,7 @@ from gtts import gTTS
 from rich import print
 from rich.traceback import install
 
-from utils import AsyncObject
+from utils import AsyncObject, get_index, get_key
 
 install()
 
@@ -251,7 +251,7 @@ class Tensura:
             The task to be awaited
         """
         chapter = asyncio.create_task(self.crawl(self.nav_next))
-        # self.current_chapter_contents = await chapter
+        self.current_chapter_contents = await chapter
         return chapter
 
     async def next(self) -> None:
@@ -276,7 +276,7 @@ class Tensura:
             The task to be awaited
         """
         chapter = asyncio.create_task(self.crawl(self.nav_prev))
-        # self.current_chapter_contents = await chapter
+        self.current_chapter_contents = await chapter
         return chapter
 
     async def prev(self) -> None:
