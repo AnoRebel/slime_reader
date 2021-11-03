@@ -75,6 +75,7 @@ class Tensura:
         self.local: bool = local
         self.alt: bool = alt
         self.player = None
+        self.is_playing: bool = False
         self.chapters: Dict[str, str] = {}
         self.audio_file: str = ""
         self.current_chapter: str = ""
@@ -214,6 +215,7 @@ class Tensura:
             self.player.say(text)
             task = asyncio.create_task(self.player.runAndWait())
             # await task
+            self.is_playing = True
         else:
             self.audio_file = uuid4().hex
             tts = gTTS(text=text, lang="en")
@@ -346,6 +348,7 @@ class Tensura:
         """
         if self.player is not None:
             self.player.play()
+            self.is_playing = True
 
     def pause(self) -> None:
         """
@@ -357,6 +360,7 @@ class Tensura:
         """
         if self.player is not None:
             self.player.pause()
+            self.is_playing = False
 
     def unpause(self) -> None:
         """
@@ -369,6 +373,7 @@ class Tensura:
         if self.player is not None:
             try:
                 self.player.unpause()
+                self.is_playing = True
             except (Exception):
                 self.player.play()
 
