@@ -81,6 +81,7 @@ class Tensura:
         self.current_chapter: str = ""
         self.current_chapter_contents: str = ""
         self.nav_next: str = ""
+        self.session: aiohttp.ClientSession = None
         self.nav_prev: str = ""
         self.chapter_title: str = ""
         self.chapter_links: List[str] = []
@@ -98,11 +99,18 @@ class Tensura:
             os.remove(f"{self.audio_file}.ogg")
         self.loop.close()
 
-    async def init(self):
-        self.session: aiohttp.ClientSession = aiohttp.ClientSession(
-            headers=self.HEADERS
-        )
+    async def init(self) -> str:
+        """
+        Initialize the session and crawl the 1st chapter
+
+        Returns
+        -------
+        chapter_content: `str`
+            The contents of the 1st chapter
+        """
+        self.session = aiohttp.ClientSession(headers=self.HEADERS)
         self.current_chapter_contents = await self.crawl()
+        return self.current_chapter_contents
 
     async def crawl(self, link=None) -> str:
         """

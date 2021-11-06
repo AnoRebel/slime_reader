@@ -190,6 +190,9 @@ background-color: transparent;</string>
            <family>DroidSansMono NF</family>
           </font>
          </property>
+         <property name="toolTip">
+          <string>Cancel</string>
+         </property>
          <property name="styleSheet">
           <string notr="true">border-radius: 4px;
 padding: 6px 18px;
@@ -220,6 +223,12 @@ color: rgb(20, 20, 20);</string>
           <font>
            <family>DroidSansMono NF</family>
           </font>
+         </property>
+         <property name="toolTip">
+          <string>Load Link Chapter</string>
+         </property>
+         <property name="statusTip">
+          <string>Load Link Chapter</string>
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {

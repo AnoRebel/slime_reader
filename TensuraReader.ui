@@ -147,6 +147,12 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>Go To Previous Chapter</string>
+          </property>
+          <property name="statusTip">
+           <string>Go To Previous Chapter</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
 	color: rgb(85, 255, 255);
@@ -179,6 +185,12 @@ QPushButton:hover {
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>Toggle Play/Pause</string>
+          </property>
+          <property name="statusTip">
+           <string>Toggle Play/Pause</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
@@ -219,6 +231,12 @@ QPushButton:hover {
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>Stop Reading</string>
+          </property>
+          <property name="statusTip">
+           <string>Stop Reading</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
 	color: rgb(85, 255, 255);
@@ -251,6 +269,12 @@ QPushButton:hover {
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>Go To Next Chapter</string>
+          </property>
+          <property name="statusTip">
+           <string>Go To Next Chapter</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
@@ -307,6 +331,9 @@ QComboBox:hover {
           </property>
           <property name="toolTip">
            <string>Load the chapter for reading</string>
+          </property>
+          <property name="statusTip">
+           <string>Load Selected Chapter</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {

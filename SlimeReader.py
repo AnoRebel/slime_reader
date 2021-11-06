@@ -123,7 +123,7 @@ class TensuraReader(QMainWindow):
 
     async def init(self):
         if APP is not None:
-            self.content = await APP.crawl()
+            self.content = await APP.init()
             if APP.error:
                 QMessageBox.critical(
                     self, "App Error", "Failed to load chapter, please restart app!"
@@ -313,12 +313,17 @@ class SlimeReader(QMainWindow):
         )
         print(f"{LOCAL}: {ALT}")
         self.main = TensuraReader(LOCAL, bool(ALT))
-        #  await self.main.init()
+        self.ok_btn.setText("Loading...")
+        await self.main.init()
+        self.ok_btn.setText("Done!")
         self.close()
         self.main.show()
 
 
 def restart() -> None:
+    """
+    Restarts the Application
+    """
     QCoreApplication.quit()
     QProcess.startDetached(sys.executable, sys.argv)
 
@@ -340,10 +345,10 @@ async def main():
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = SlimeReader()
-    window.show()
-    sys.exit(app.exec())
+    #  app = QApplication(sys.argv)
+    #  window = SlimeReader()
+    #  window.show()
+    #  sys.exit(app.exec())
     try:
         qasync.run(main())
     except asyncio.exceptions.CancelledError:
