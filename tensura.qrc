@@ -1,18 +1,20 @@
 <RCC>
-  <qresource>
-    <file>assets/exit.jpeg</file>
-    <file>assets/logo.jpeg</file>
-    <file>assets/about.jpeg</file>
-    <file>assets/load.jpeg</file>
-    <file>assets/next.jpeg</file>
-    <file>assets/pause.jpeg</file>
-    <file>assets/play.jpeg</file>
-    <file>assets/prev.jpeg</file>
-    <file>assets/restart.jpeg</file>
-    <file>assets/stop.jpeg</file>
-    <file>assets/tempest.jpg</file>
-    <file>assets/bg-icon.png</file>
-    <file>assets/rimuru.jpeg</file>
-    <file>assets/tensura.jpg</file>
+  <qresource prefix="icons">
+    <file>assets/icons/about.jpeg</file>
+    <file>assets/icons/bg-icon.png</file>
+    <file>assets/icons/exit.jpeg</file>
+    <file>assets/icons/load.jpeg</file>
+    <file>assets/icons/next.jpeg</file>
+    <file>assets/icons/pause.jpeg</file>
+    <file>assets/icons/play.jpeg</file>
+    <file>assets/icons/prev.jpeg</file>
+    <file>assets/icons/restart.jpeg</file>
+    <file>assets/icons/stop.jpeg</file>
+  </qresource>
+  <qresource prefix="images">
+    <file>assets/images/rimuru.jpeg</file>
+    <file>assets/images/tempest.jpg</file>
+    <file>assets/images/tensura-bg.jpg</file>
+    <file>assets/images/tensura.jpg</file>
   </qresource>
 </RCC>

@@ -14,8 +14,8 @@
    <string>Chapter Link</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>assets/bg-icon.png</normaloff>assets/bg-icon.png</iconset>
+   <iconset resource="../tensura.qrc">
+    <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">border-radius: 6px;
@@ -247,8 +247,8 @@ QPushButton:hover {
           <string>Load</string>
          </property>
          <property name="icon">
-          <iconset resource="tensura.qrc">
-           <normaloff>:/assets/load.jpeg</normaloff>:/assets/load.jpeg</iconset>
+          <iconset resource="../tensura.qrc">
+           <normaloff>:/icons/assets/icons/load.jpeg</normaloff>:/icons/assets/icons/load.jpeg</iconset>
          </property>
         </widget>
        </item>
@@ -272,7 +272,7 @@ QPushButton:hover {
   </layout>
  </widget>
  <resources>
-  <include location="tensura.qrc"/>
+  <include location="../tensura.qrc"/>
  </resources>
  <connections/>
 </ui>

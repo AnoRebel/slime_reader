@@ -32,8 +32,8 @@
    <string>Tensura Reader</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="tensura.qrc">
-    <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+   <iconset resource="../tensura.qrc">
+    <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(20, 20, 20);</string>
@@ -103,7 +103,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="tensura.qrc">:/assets/tempest.jpg</pixmap>
+         <pixmap resource="../tensura.qrc">:/images/assets/images/tempest.jpg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -169,8 +169,8 @@ QPushButton:hover {
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="tensura.qrc">
-            <normaloff>:/assets/prev.jpeg</normaloff>:/assets/prev.jpeg</iconset>
+           <iconset resource="../tensura.qrc">
+            <normaloff>:/icons/assets/icons/prev.jpeg</normaloff>:/icons/assets/icons/prev.jpeg</iconset>
           </property>
           <property name="shortcut">
            <string>P</string>
@@ -208,8 +208,8 @@ QPushButton:hover {
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="tensura.qrc">
-            <normaloff>:/assets/play.jpeg</normaloff>:/assets/play.jpeg</iconset>
+           <iconset resource="../tensura.qrc">
+            <normaloff>:/icons/assets/icons/play.jpeg</normaloff>:/icons/assets/icons/play.jpeg</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -253,8 +253,8 @@ QPushButton:hover {
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="tensura.qrc">
-            <normaloff>:/assets/stop.jpeg</normaloff>:/assets/stop.jpeg</iconset>
+           <iconset resource="../tensura.qrc">
+            <normaloff>:/icons/assets/icons/stop.jpeg</normaloff>:/icons/assets/icons/stop.jpeg</iconset>
           </property>
           <property name="shortcut">
            <string>S</string>
@@ -292,8 +292,8 @@ QPushButton:hover {
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="tensura.qrc">
-            <normaloff>:/assets/next.jpeg</normaloff>:/assets/next.jpeg</iconset>
+           <iconset resource="../tensura.qrc">
+            <normaloff>:/icons/assets/icons/next.jpeg</normaloff>:/icons/assets/icons/next.jpeg</iconset>
           </property>
           <property name="shortcut">
            <string>N</string>
@@ -351,8 +351,8 @@ QPushButton:hover {
            <string>Load</string>
           </property>
           <property name="icon">
-           <iconset resource="tensura.qrc">
-            <normaloff>:/assets/load.jpeg</normaloff>:/assets/load.jpeg</iconset>
+           <iconset resource="../tensura.qrc">
+            <normaloff>:/icons/assets/icons/load.jpeg</normaloff>:/icons/assets/icons/load.jpeg</iconset>
           </property>
          </widget>
         </item>
@@ -462,8 +462,8 @@ QMenu:hover {
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="tensura.qrc">
-     <normaloff>:/assets/restart.jpeg</normaloff>:/assets/restart.jpeg</iconset>
+    <iconset resource="../tensura.qrc">
+     <normaloff>:/icons/assets/icons/restart.jpeg</normaloff>:/icons/assets/icons/restart.jpeg</iconset>
    </property>
    <property name="text">
     <string>&amp;Restart</string>
@@ -477,8 +477,8 @@ QMenu:hover {
   </action>
   <action name="action_Quit">
    <property name="icon">
-    <iconset resource="tensura.qrc">
-     <normaloff>:/assets/exit.jpeg</normaloff>:/assets/exit.jpeg</iconset>
+    <iconset resource="../tensura.qrc">
+     <normaloff>:/icons/assets/icons/exit.jpeg</normaloff>:/icons/assets/icons/exit.jpeg</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -492,8 +492,8 @@ QMenu:hover {
   </action>
   <action name="action_About">
    <property name="icon">
-    <iconset resource="tensura.qrc">
-     <normaloff>:/assets/about.jpeg</normaloff>:/assets/about.jpeg</iconset>
+    <iconset resource="../tensura.qrc">
+     <normaloff>:/icons/assets/icons/about.jpeg</normaloff>:/icons/assets/icons/about.jpeg</iconset>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -504,8 +504,8 @@ QMenu:hover {
   </action>
   <action name="action_LoadLink">
    <property name="icon">
-    <iconset resource="tensura.qrc">
-     <normaloff>:/assets/load.jpeg</normaloff>:/assets/load.jpeg</iconset>
+    <iconset resource="../tensura.qrc">
+     <normaloff>:/icons/assets/icons/load.jpeg</normaloff>:/icons/assets/icons/load.jpeg</iconset>
    </property>
    <property name="text">
     <string>&amp;Load Link</string>
@@ -516,7 +516,7 @@ QMenu:hover {
   </action>
  </widget>
  <resources>
-  <include location="tensura.qrc"/>
+  <include location="../tensura.qrc"/>
  </resources>
  <connections/>
 </ui>

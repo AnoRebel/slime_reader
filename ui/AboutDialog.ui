@@ -38,8 +38,8 @@
    <string>Tensura Reader - About</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="tensura.qrc">
-    <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+   <iconset resource="../tensura.qrc">
+    <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">border-radius: 6px;
@@ -116,7 +116,7 @@ background-color: rgb(20, 20, 20);</string>
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="tensura.qrc">:/assets/rimuru.jpeg</pixmap>
+       <pixmap resource="../tensura.qrc">:/images/assets/images/rimuru.jpeg</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -154,8 +154,8 @@ QPushButton:hover {
        <string>Ok</string>
       </property>
       <property name="icon">
-       <iconset resource="tensura.qrc">
-        <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+       <iconset resource="../tensura.qrc">
+        <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
       </property>
      </widget>
      <widget class="QLabel" name="app_name">
@@ -213,6 +213,7 @@ QPushButton:hover {
   </layout>
  </widget>
  <resources>
+  <include location="../tensura.qrc"/>
   <include location="tensura.qrc"/>
  </resources>
  <connections/>

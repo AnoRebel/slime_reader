@@ -58,7 +58,7 @@ class ChapterLink(QDialog):
 
     def __init__(self) -> None:
         super().__init__()
-        loadUi("ChapterLink.ui", self)
+        loadUi("ui/ChapterLink.ui", self)
 
         # Remove Titlebar
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -90,7 +90,7 @@ class ChapterLink(QDialog):
 class AboutDialog(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        loadUi("AboutDialog.ui", self)
+        loadUi("ui/AboutDialog.ui", self)
 
         # Remove Titlebar
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -110,7 +110,7 @@ class AboutDialog(QDialog):
 class TensuraReader(QMainWindow):
     def __init__(self, local: bool, alt: bool) -> None:
         super().__init__()
-        loadUi("TensuraReader.ui", self)
+        loadUi("ui/TensuraReader.ui", self)
         #  self.reader = await Tensura()
         self.connectSignals()
         self.local = local
@@ -274,14 +274,14 @@ class TensuraReader(QMainWindow):
 class SlimeReader(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        loadUi("SlimeReader.ui", self)
+        loadUi("ui/SlimeReader.ui", self)
 
         # Fix Bg Image
         self.frame.setStyleSheet(
             "QFrame {\n"
             "    border-radius: 6px;\n"
             "    background-color: rgb(20, 20, 20);\n"
-            "    background-image: url(assets/tensura.jpg);\n"
+            "    background-image: url(assets/images/tensura.jpg);\n"
             "}"
         )
 

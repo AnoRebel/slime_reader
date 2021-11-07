@@ -38,8 +38,8 @@
    <string>Tensura Reader</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="tensura.qrc">
-    <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+   <iconset resource="../tensura.qrc">
+    <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -124,11 +124,14 @@ background-color: rgb(20, 20, 20);</string>
         <height>352</height>
        </size>
       </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
       <property name="styleSheet">
        <string notr="true">QFrame {
+	background-image: url(:/images/assets/images/tensura.jpg);
 	background-color: rgb(20, 20, 20);
 	border-radius: 6px;
-	background-image: url(:/assets/tensura.jpg);
 }</string>
       </property>
       <property name="frameShape">
@@ -286,8 +289,8 @@ QPushButton:hover {
         <string>Enter Tempest</string>
        </property>
        <property name="icon">
-        <iconset resource="tensura.qrc">
-         <normaloff>:/assets/bg-icon.png</normaloff>:/assets/bg-icon.png</iconset>
+        <iconset resource="../tensura.qrc">
+         <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
        </property>
       </widget>
       <widget class="QPushButton" name="exit_btn">
@@ -323,8 +326,8 @@ QPushButton:hover {
         <string>Exit To Milim</string>
        </property>
        <property name="icon">
-        <iconset resource="tensura.qrc">
-         <normaloff>:/assets/exit.jpeg</normaloff>:/assets/exit.jpeg</iconset>
+        <iconset resource="../tensura.qrc">
+         <normaloff>:/icons/assets/icons/exit.jpeg</normaloff>:/icons/assets/icons/exit.jpeg</iconset>
        </property>
       </widget>
      </widget>
@@ -333,7 +336,7 @@ QPushButton:hover {
   </widget>
  </widget>
  <resources>
-  <include location="tensura.qrc"/>
+  <include location="../tensura.qrc"/>
  </resources>
  <connections/>
 </ui>
