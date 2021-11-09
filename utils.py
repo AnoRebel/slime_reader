@@ -1,6 +1,62 @@
 from threading import Event, Thread
 from time import time
 from typing import Dict, List
+import traceback
+import sys
+from PyQt5.QtCore import QRunnable, QObject, pyqtSignal as Signal, pyqtSlot as Slot
+
+
+class WorkerSignals(QObject):
+    """
+    Defines signals available from a running worker thread.
+
+    Supported signals:
+    -----------------
+    finished: `None`
+        No data
+    error: `tuple`
+        (exctype, value, traceback.format_exc())
+    result: `object`
+        Data returned from processing, anything
+    """
+
+    finished = Signal()
+    error = Signal(tuple)
+    result = Signal(object)
+    progress = Signal(int)
+
+
+class Worker(QRunnable):
+    """
+    Worker Thread
+    """
+
+    def __init__(self, fn, *args, **kwargs) -> None:
+        super(Worker, self).__init__()
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()
+        # Add the callback to the kwargs
+        self.kwargs["progress_callback"] = self.signals.progress
+
+    @Slot()
+    def run(self):
+        """
+        Initialise the runner function with passed args, kwargs.
+        """
+
+        # Retrieve args/kwargs here; and fire processing using them
+        try:
+            result = self.fn(*self.args, **self.kwargs)
+        except:
+            traceback.print_exc()
+            exctype, value = sys.exc_info()[:2]
+            self.signals.error.emit((exctype, value, traceback.format_exc()))
+        else:
+            self.signals.result.emit(result)
+        finally:
+            self.signals.finished.emit()
 
 
 def get_key(a_dict: Dict[str, str], val: str) -> str:

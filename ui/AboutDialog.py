@@ -15,7 +15,9 @@ class Ui_AboutDialog(object):
     def setupUi(self, AboutDialog):
         AboutDialog.setObjectName("AboutDialog")
         AboutDialog.resize(400, 200)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(AboutDialog.sizePolicy().hasHeightForWidth())
@@ -24,16 +26,23 @@ class Ui_AboutDialog(object):
         AboutDialog.setMaximumSize(QtCore.QSize(400, 200))
         AboutDialog.setBaseSize(QtCore.QSize(400, 200))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icons/assets/icons/bg-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(
+            QtGui.QPixmap(":/icons/assets/icons/bg-icon.png"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
         AboutDialog.setWindowIcon(icon)
-        AboutDialog.setStyleSheet("border-radius: 6px;\n"
-"background-color: rgb(20, 20, 20);")
+        AboutDialog.setStyleSheet(
+            "border-radius: 6px;\n" "background-color: rgb(20, 20, 20);"
+        )
         self.verticalLayout = QtWidgets.QVBoxLayout(AboutDialog)
         self.verticalLayout.setContentsMargins(4, 4, 4, 4)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame = QtWidgets.QFrame(AboutDialog)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
@@ -41,11 +50,13 @@ class Ui_AboutDialog(object):
         self.frame.setMinimumSize(QtCore.QSize(392, 192))
         self.frame.setMaximumSize(QtCore.QSize(392, 192))
         self.frame.setBaseSize(QtCore.QSize(392, 192))
-        self.frame.setStyleSheet("QFrame{\n"
-"    color: #ECECEC;\n"
-"    border-radius: 6px;\n"
-"    background-color: rgb(20, 20, 20);\n"
-"}")
+        self.frame.setStyleSheet(
+            "QFrame{\n"
+            "    color: #ECECEC;\n"
+            "    border-radius: 6px;\n"
+            "    background-color: rgb(20, 20, 20);\n"
+            "}"
+        )
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -63,14 +74,16 @@ class Ui_AboutDialog(object):
         font.setFamily("DroidSansMono NF")
         font.setPointSize(12)
         self.dismiss_btn.setFont(font)
-        self.dismiss_btn.setStyleSheet("QPushButton{\n"
-"    background-color: rgba(85, 255, 255, 160);\n"
-"    border-radius: 4px;\n"
-"    color: #141414;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(85, 255, 255, 190);\n"
-"}")
+        self.dismiss_btn.setStyleSheet(
+            "QPushButton{\n"
+            "    background-color: rgba(85, 255, 255, 160);\n"
+            "    border-radius: 4px;\n"
+            "    color: #141414;\n"
+            "}\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(85, 255, 255, 190);\n"
+            "}"
+        )
         self.dismiss_btn.setIcon(icon)
         self.dismiss_btn.setObjectName("dismiss_btn")
         self.app_name = QtWidgets.QLabel(self.frame)
@@ -88,9 +101,9 @@ class Ui_AboutDialog(object):
         font = QtGui.QFont()
         font.setFamily("DroidSansMono NF")
         self.app_description.setFont(font)
-        self.app_description.setStyleSheet("QLabel:hover {\n"
-"    color: rgb(85, 255, 255);\n"
-"}")
+        self.app_description.setStyleSheet(
+            "QLabel:hover {\n" "    color: rgb(85, 255, 255);\n" "}"
+        )
         self.app_description.setWordWrap(True)
         self.app_description.setObjectName("app_description")
         self.verticalLayout.addWidget(self.frame)
@@ -103,5 +116,12 @@ class Ui_AboutDialog(object):
         AboutDialog.setWindowTitle(_translate("AboutDialog", "Tensura Reader - About"))
         self.dismiss_btn.setText(_translate("AboutDialog", "Ok"))
         self.app_name.setText(_translate("AboutDialog", "Tensura Reader"))
-        self.app_description.setText(_translate("AboutDialog", "A simple GUI for the Tensura script I created to scrape and read for me Tensura(since I\'m too lazy)"))
+        self.app_description.setText(
+            _translate(
+                "AboutDialog",
+                "A simple GUI for the Tensura script I created to scrape and read for me Tensura(since I'm too lazy)",
+            )
+        )
+
+
 import tensura_rc

@@ -3,23 +3,19 @@ import sys
 
 #  from threading import Thread, Event
 import qasync
-from qasync import asyncSlot
+from qasync import QApplication, asyncClose, asyncSlot
 
-#  from qasync import asyncSlot, asyncClose, QApplication
+#  from qasync import asyncSlot, asyncClose
+
 
 try:
     #  from PyQt5 import QtGui, QtWidgets, QtCore, uic
-    from PyQt5.QtCore import QCoreApplication, QProcess, Qt
+    from PyQt5.QtCore import QCoreApplication, QProcess, Qt, QThreadPool
     from PyQt5.QtCore import pyqtSignal as Signal
     from PyQt5.QtCore import pyqtSlot as Slot
-    from PyQt5.QtGui import QColor, QPixmap
-    from PyQt5.QtWidgets import (
-        QApplication,
-        QDialog,
-        QMessageBox,
-        QGraphicsDropShadowEffect,
-        QMainWindow,
-    )
+    from PyQt5.QtGui import QColor, QIcon, QPixmap
+    from PyQt5.QtWidgets import QDialog  # QApplication,
+    from PyQt5.QtWidgets import QGraphicsDropShadowEffect, QMainWindow, QMessageBox
     from PyQt5.uic import loadUi
 except ImportError:
     #  from PySide2 import QtGui, QtWidgets, QtCore
@@ -28,7 +24,7 @@ except ImportError:
         QMainWindow,
         QMessageBox,
         QGraphicsDropShadowEffect,
-        QApplication,
+        #  QApplication,
     )
     from PySide2.QtCore import (
         pyqtSlot as Slot,
@@ -36,20 +32,23 @@ except ImportError:
         Qt,
         QCoreQCoreApplication,
         QProcess,
+        QThreadPool,
     )
-    from PySide2.QtGui import QColor, QPixmap
+    from PySide2.QtGui import QColor, QPixmap, QIcon
     from PySide2.uic import loadUi
 
 from functools import partial
 from typing import Optional
+
 from rich.traceback import install
 
 from Tensura import Tensura
+from ui import Ui_AboutDialog, Ui_ChapterLinkDialog, Ui_InitialScreen, Ui_TensuraReader
 
 install()
 
-LOCAL = True
-ALT = False
+LOCAL: bool = True
+ALT: bool = False
 APP: Optional[Tensura] = None
 
 
@@ -77,14 +76,16 @@ class ChapterLink(QDialog):
             self.load_chapter_btn.setText("Load")
             self.load_chapter_btn.setEnabled(True)
             if APP.error:
-                QMessageBox.critical(self, "Network Error", "Failed to load chapter.")
+                msgBox(self, "Network Error", "Failed to load chapter.")
+                #  QMessageBox.critical(self, "Network Error", "Failed to load chapter.")
             else:
                 self.loaded.emit(content)
                 self.close()
         else:
             self.load_chapter_btn.setText("Load")
             self.load_chapter_btn.setEnabled(True)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
 
 class AboutDialog(QDialog):
@@ -116,25 +117,50 @@ class TensuraReader(QMainWindow):
         self.local = local
         self.alt = alt
         self.content: str = ""
-        self.statusbar.showMessage(f"{self.alt}: {self.local}")
+        self.statusbar.setStyleSheet(
+            "QStatusBar {color: rgb(85, 255, 255);background-color: rgb(20, 20,20);}"
+        )
+        self.threadpool = QThreadPool()
+        print(
+            f"Multithreading with maximum {str(self.threadpool.maxThreadCount())} threads"
+        )
+        self.statusbar.showMessage(
+            f"Multithreading with maximum {str(self.threadpool.maxThreadCount())} threads",
+            2000,
+        )
         global APP
         APP = Tensura(local=self.local, alt=self.alt)
-        #  self.connectSignals()
+        self.origin = APP.BASE_URL_ALT if self.alt else APP.BASE_URL
+        self.connectSignals()
 
     async def init(self):
         if APP is not None:
+            self.prev_btn.setEnabled(APP.current_chapter != self.origin)
             self.content = await APP.init()
             if APP.error:
-                QMessageBox.critical(
-                    self, "App Error", "Failed to load chapter, please restart app!"
+                msgBox(
+                    self,
+                    "App Error",
+                    "Failed to load chapter, please restart app!",
+                    error=True,
                 )
+                #  QMessageBox.critical(
+                #  self, "App Error", "Failed to load chapter, please restart app!"
+                #  )
             else:
                 self.chapter_content.setText(self.content)
+                self.setProgress()
                 if not self.alt:
                     self.configureChapterSelect()
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
+
+    @asyncClose
+    async def closeEvent(self, event):
+        if APP is not None:
+            await APP.session.close()
 
     def connectSignals(self) -> None:
         # Actions
@@ -162,7 +188,8 @@ class TensuraReader(QMainWindow):
                 self.chapter_select.addItems(list(APP.chapters.keys()))
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     def setChapterContent(self, content: Optional[str] = None) -> None:
         if APP is not None:
@@ -175,7 +202,8 @@ class TensuraReader(QMainWindow):
                 self.chapter_content.setText(content)
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     @Slot(str)
     def linkLoaded(self, content):
@@ -185,7 +213,8 @@ class TensuraReader(QMainWindow):
             self.dlg.close()
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     def loadLink(self) -> None:
         self.dlg = ChapterLink()
@@ -199,91 +228,120 @@ class TensuraReader(QMainWindow):
     @asyncSlot()
     async def loadChapter(self) -> None:
         if APP is not None:
+            self.load_btn.setEnabled(False)
+            self.load_btn.setText("Loading...")
             key = self.chapter_select.currentText()
             link = APP.chapters[key]
+            self.statusbar.showMessage("Loading selected chapter...", 3000)
             self.content = await APP.crawl(link)
+            self.statusbar.showMessage("Chapter loaded...", 1000)
             self.setChapterContent(self.content)
+            self.setProgress()
+            self.load_btn.setText("Load")
+            self.load_btn.setEnabled(True)
+            self.prev_btn.setEnabled(APP.current_chapter != self.origin)
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly")
 
     @asyncSlot()
     async def on_prev(self) -> None:
         self.prev_btn.setText("Loading...")
         self.prev_btn.setEnabled(False)
         if APP is not None:
-            self.content = await APP.load_next()
+            self.statusbar.showMessage("Loading previous chapter...", 3000)
+            self.content = await APP.load_prev()
+            self.statusbar.showMessage("Chapter loaded.", 1000)
+            self.setProgress()
             self.prev_btn.setText("")
             self.prev_btn.setEnabled(True)
             if APP.error:
-                QMessageBox.critical(
-                    self, "Network Error", "Failed to load previous chapter."
-                )
+                msgBox(self, "Network Error", "Failed to laod previous chapter.")
+                #  QMessageBox.critical(
+                #  self, "Network Error", "Failed to load previous chapter."
+                #  )
             else:
                 self.chapter_content.setText(self.content)
+            self.prev_btn.setEnabled(APP.current_chapter != self.origin)
         else:
             self.prev_btn.setText("")
             self.prev_btn.setEnabled(True)
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     @asyncSlot()
     async def on_next(self) -> None:
         self.next_btn.setText("Loading...")
         self.next_btn.setEnabled(False)
         if APP is not None:
-            self.content = await APP.load_prev()
+            self.statusbar.showMessage("Loading next chapter...", 3000)
+            self.content = await APP.load_next()
+            self.statusbar.showMessage("Chapter loaded.", 1000)
+            self.setProgress()
             self.next_btn.setText("")
             self.next_btn.setEnabled(True)
             if APP.error:
-                QMessageBox.critical(
-                    self, "Network Error", "Failed to load next chapter."
-                )
+                msgBox(self, "Network Error", "Failed to load next chapter.")
+                #  QMessageBox.critical(
+                #  self, "Network Error", "Failed to load next chapter."
+                #  )
             else:
                 self.chapter_content.setText(self.content)
+                if not self.alt:
+                    self.chapter_select.setCurrentIndex(APP.current_index)
         else:
             self.next_btn.setText("")
             self.next_btn.setEnabled(True)
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     def on_stop(self) -> None:
         if APP is not None:
             APP.stop()
+            play_icon = QPixmap("assets/icons/play.jpeg")
+            self.toggle_play_btn.setIcon(QIcon(play_icon))
+            self.statusbar.showMessage("Reading stopped...", 5000)
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
 
     @asyncSlot()
     async def togglePlayPause(self) -> None:
         if APP is not None:
             if APP.is_playing:
-                self.toggle_play_btn.setIcon(QPixmap("assets/pause.jpeg"))
                 APP.pause()
+                pause_icon = QPixmap("assets/icons/pause.jpeg")
+                self.toggle_play_btn.setIcon(QIcon(pause_icon))
+                self.statusbar.showMessage("Reading paused...", 5000)
             else:
-                self.toggle_play_btn.setIcon(QPixmap("assets/play.jpeg"))
                 if APP.player is not None:
                     APP.unpause()
+                    play_icon = QPixmap("assets/icons/play.jpeg")
+                    self.toggle_play_btn.setIcon(QIcon(play_icon))
+                    self.statusbar.showMessage("Reading unpaused...", 5000)
                 else:
                     await APP.read(self.content)
+                    self.statusbar.showMessage("Reading started...", 5000)
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
-            QMessageBox.critical(self, "App Error", "App not initialized properly.")
+            msgBox(self, "App Error", "App not initialized properly.", error=True)
+            #  QMessageBox.critical(self, "App Error", "App not initialized properly.")
+
+    def setProgress(self) -> None:
+        if APP is not None:
+            self.progress_label.setText(APP.progress())
+        else:
+            self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
 
 
 class SlimeReader(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         loadUi("ui/SlimeReader.ui", self)
-
-        # Fix Bg Image
-        self.frame.setStyleSheet(
-            "QFrame {\n"
-            "    border-radius: 6px;\n"
-            "    background-color: rgb(20, 20, 20);\n"
-            "    background-image: url(assets/images/tensura.jpg);\n"
-            "}"
-        )
 
         # Remove Titlebar
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -306,23 +364,43 @@ class SlimeReader(QMainWindow):
     async def on_ok(self) -> None:
         global LOCAL, ALT
         ALT = self.site_select.currentIndex()
-        LOCAL = (
-            True
-            if (self.online.isChecked() and not self.offline.isChecked())
-            else False
-        )
-        print(f"{LOCAL}: {ALT}")
-        self.main = TensuraReader(LOCAL, bool(ALT))
+        #  LOCAL = (
+        #  False
+        #  if (self.online.isChecked() and not self.offline.isChecked())
+        #  else True
+        #  )
+        LOCAL = self.offline.isChecked()
         self.ok_btn.setText("Loading...")
+        self.main = TensuraReader(LOCAL, bool(ALT))
         await self.main.init()
         self.ok_btn.setText("Done!")
         self.close()
         self.main.show()
 
 
+def msgBox(root, title: str, content: str, error: bool = False) -> None:
+    qmsgBox = QMessageBox(root)
+    qmsgBox.setStyleSheet(
+        "QMessageBox{background-color: rgb(20, 20, 20);color: rgb(20, 255, 255);}\n QPushButton{border-radius: 4px;padding: 6px;background-color: rgba(244, 164, 173, 200);color: rgb(20, 20, 20);}\n QPushButton:hover{background-color: rgb(244, 164, 173);}"
+    )
+    qmsgBox.setIcon(QMessageBox.Critical)
+    qmsgBox.setWindowTitle(title)
+    qmsgBox.setText(content)
+    if error:
+        qmsgBox.setStandardButtons(QMessageBox.Retry | QMessageBox.Ok)
+        retval = qmsgBox.exec_()
+        if retval == QMessageBox.Retry:
+            restart()
+    else:
+        qmsgBox.setStandardButtons(QMessageBox.Ok)
+        retval = qmsgBox.exec_()
+
+
 def restart() -> None:
     """
     Restarts the Application
+
+    NOTE: Buggy at the moment
     """
     QCoreApplication.quit()
     QProcess.startDetached(sys.executable, sys.argv)

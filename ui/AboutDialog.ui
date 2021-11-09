@@ -214,7 +214,7 @@ QPushButton:hover {
  </widget>
  <resources>
   <include location="../tensura.qrc"/>
-  <include location="tensura.qrc"/>
+  <include location="../tensura.qrc"/>
  </resources>
  <connections/>
 </ui>

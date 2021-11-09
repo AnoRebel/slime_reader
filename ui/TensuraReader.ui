@@ -36,7 +36,13 @@
     <normaloff>:/icons/assets/icons/bg-icon.png</normaloff>:/icons/assets/icons/bg-icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(20, 20, 20);</string>
+   <string notr="true">background-color: rgb(20, 20, 20);
+
+QStatusBar {
+	font-weight: bold;
+	color: rgb(85, 255, 255);
+	background-color: rgb(20, 20, 20);
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -472,7 +478,7 @@ QMenu:hover {
     <string>Change Reading Site</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+N</string>
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="action_Quit">

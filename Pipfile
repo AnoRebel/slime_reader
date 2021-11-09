@@ -14,7 +14,6 @@ cchardet = "*"
 pygame = "*"
 python-vlc = "*"
 pydub = "*"
-blessings = "*"
 httpx = {extras = ["http2"], version = "*"}
 pyqt5 = "*"
 rich = "*"

@@ -8,13 +8,12 @@ import aiohttp
 import httpx
 import pygame
 import pyttsx3
-from blessings import Terminal
 from bs4 import BeautifulSoup
 from gtts import gTTS
 from rich import print
 from rich.traceback import install
 
-from utils import AsyncObject, get_index, get_key
+from utils import get_index, get_key
 
 install()
 
@@ -61,8 +60,6 @@ class Tensura:
         Using the configured player, stop playing
     """
 
-    loop = asyncio.get_event_loop()
-    term = Terminal()
     ORIGIN = "https://novelsonline.net"
     ORIGIN_ALT = "https://readnovelfull.com"
     BASE_URL = ORIGIN + "/tensei-shitara-slime-datta-ken-ln/volume-1/chapter-pr"
@@ -79,6 +76,7 @@ class Tensura:
         self.chapters: Dict[str, str] = {}
         self.audio_file: str = ""
         self.current_chapter: str = ""
+        self.current_index: int = 0
         self.current_chapter_contents: str = ""
         self.nav_next: str = ""
         self.session: aiohttp.ClientSession = None
@@ -88,6 +86,7 @@ class Tensura:
         self.chapter_names: List[str] = []
         pygame.mixer.init()
         self.error = False
+        self.initialized: bool = False
 
     def __del__(self) -> None:
         pygame.mixer.music.unload()
@@ -97,7 +96,6 @@ class Tensura:
             os.remove(f"{self.audio_file}.mp3")
         if os.path.exists(f"{self.audio_file}.ogg"):
             os.remove(f"{self.audio_file}.ogg")
-        self.loop.close()
 
     async def init(self) -> str:
         """
@@ -110,6 +108,7 @@ class Tensura:
         """
         self.session = aiohttp.ClientSession(headers=self.HEADERS)
         self.current_chapter_contents = await self.crawl()
+        self.initialized = True
         return self.current_chapter_contents
 
     async def crawl(self, link=None) -> str:
@@ -174,18 +173,22 @@ class Tensura:
                         else ""
                     )
 
-                    self.chapter_links = [
-                        option.get("value", "")
-                        for option in soup.find_all(value=re.compile("chapter"))
-                    ]
-                    self.chapter_names = [
-                        option.get_text()
-                        for option in soup.find_all(value=re.compile("chapter"))
-                    ]
+                    if not self.initialized:
+                        self.chapter_links = [
+                            option.get("value", "")
+                            for option in soup.find_all(value=re.compile("chapter"))
+                        ]
+                        self.chapter_names = [
+                            option.get_text()
+                            for option in soup.find_all(value=re.compile("chapter"))
+                        ]
 
-                    for i in range(len(self.chapter_names)):
-                        self.chapters[self.chapter_names[i]] = self.chapter_links[i]
+                        for i in range(len(self.chapter_names)):
+                            self.chapters[self.chapter_names[i]] = self.chapter_links[i]
 
+                    self.current_index = (
+                        get_index(self.chapter_links, self.current_chapter) - 1
+                    )
                     raw_chapter_contents = soup.find(id="contentall")
                     # Remove unnecessary contents
                     try:
@@ -219,11 +222,12 @@ class Tensura:
             self.player = pyttsx3.init()
             # I like a female voice
             self.player.setProperty("voice", "english+f3")
-            self.player.setProperty("rate", 180)
+            self.player.setProperty("rate", 120)
+            self.player.setProperty("volume", 0.5)
             self.player.say(text)
+            self.is_playing = True
             task = asyncio.create_task(self.player.runAndWait())
             # await task
-            self.is_playing = True
         else:
             self.audio_file = uuid4().hex
             tts = gTTS(text=text, lang="en")
@@ -238,11 +242,9 @@ class Tensura:
                 AudioSegment.from_mp3(f"{self.audio_file}.mp3").export(
                     f"{self.audio_file}.ogg", format="ogg"
                 )
-                load = asyncio.create_task(
-                    pygame.mixer.music.load(f"{self.audio_file}.ogg")
-                )
+
                 self.player = pygame.mixer.music
-                await load
+                self.player.load(f"{self.audio_file}.ogg")
             self.play()
             # self.current_chapter_contents = await load_next()
             ## OS players (needs installation)
@@ -250,7 +252,7 @@ class Tensura:
             # os.system(f"mpg321 {audio.mp3}")
             # os.system(f"play -t mp3 {audio.mp3}")
 
-    async def load_next(self) -> asyncio.Task:
+    async def load_next(self) -> str:
         """
         Crawls the next chapter but does not read it.
         Await `self.next()` to read it.
@@ -262,7 +264,7 @@ class Tensura:
         """
         chapter = asyncio.create_task(self.crawl(self.nav_next))
         self.current_chapter_contents = await chapter
-        return chapter
+        return self.current_chapter_contents
 
     async def next(self) -> None:
         """
@@ -275,7 +277,7 @@ class Tensura:
         self.current_chapter_contents = await self.load_next()
         asyncio.create_task(self.read(self.current_chapter_contents))
 
-    async def load_prev(self) -> asyncio.Task:
+    async def load_prev(self) -> str:
         """
         Crawls the previous chapter but does not read it.
         Await `self.prev()` to read it
@@ -287,7 +289,7 @@ class Tensura:
         """
         chapter = asyncio.create_task(self.crawl(self.nav_prev))
         self.current_chapter_contents = await chapter
-        return chapter
+        return self.current_chapter_contents
 
     async def prev(self) -> None:
         """
@@ -319,7 +321,7 @@ class Tensura:
             self.current_chapter_contents = await chapt
         else:
             print(
-                f"{self.term.bold}{self.term.red}The site {self.term.green_on_black(self.term.underline(self.ORIGIN_ALT))} doesn't provide a scrapable chapter list!{self.term.normal}"
+                f"The site {self.ORIGIN_ALT} doesn't provide a scrapable chapter list!"
             )
             self.read("This site doesn't provide a scrapable chapter list!")
 
@@ -333,17 +335,15 @@ class Tensura:
         """
         if len(self.chapter_links) > 0:
             print(
-                f"{self.term.bold}Reading chapter {self.term.blue_on_black(get_index(self.chapter_links, self.current_chapter))} of {self.term.yellow_on_black(len(self.chapter_links))}, named {self.term.green_on_black(get_key(self.chapters, self.current_chapter))}{self.term.normal}"
+                f"Reading chapter {str(get_index(self.chapter_links, self.current_chapter))} of {str(len(self.chapter_links))}, named {get_key(self.chapters, self.current_chapter)}"
             )
-            self.read(
-                f"Reading chapter {get_index(self.chapter_links, self.current_chapter)} of {len(self.chapter_links)}, named {get_key(self.chapters, self.current_chapter)}"
-            )
-            return f"Reading chapter {get_index(self.chapter_links, self.current_chapter)} of {len(self.chapter_links)}, named {get_key(self.chapters, self.current_chapter)}"
+            #  self.read(
+            #  f"Reading chapter {str(get_index(self.chapter_links, self.current_chapter))} of {str(len(self.chapter_links))}, named {get_key(self.chapters, self.current_chapter)}"
+            #  )
+            return f"Reading chapter {str(get_index(self.chapter_links, self.current_chapter))} of {str(len(self.chapter_links))}, named {get_key(self.chapters, self.current_chapter)}"
         else:
-            print(
-                f"{self.term.bold}Reading {self.term.green_on_black(self.chapter_title)} {self.term.normal}"
-            )
-            self.read(f"Reading {self.chapter_title}")
+            print(f"Reading {self.chapter_title}")
+            #  self.read(f"Reading {self.chapter_title}")
             return f"Reading {self.chapter_title}"
 
     def play(self) -> None:
