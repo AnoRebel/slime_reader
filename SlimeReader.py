@@ -1,12 +1,8 @@
 import asyncio
 import sys
 
-#  from threading import Thread, Event
 import qasync
 from qasync import QApplication, asyncClose, asyncSlot
-
-#  from qasync import asyncSlot, asyncClose
-
 
 try:
     #  from PyQt5 import QtGui, QtWidgets, QtCore, uic
@@ -44,6 +40,7 @@ from rich.traceback import install
 
 from Tensura import Tensura
 from ui import Ui_AboutDialog, Ui_ChapterLinkDialog, Ui_InitialScreen, Ui_TensuraReader
+from utils import Worker
 
 install()
 
@@ -120,14 +117,14 @@ class TensuraReader(QMainWindow):
         self.statusbar.setStyleSheet(
             "QStatusBar {color: rgb(85, 255, 255);background-color: rgb(20, 20,20);}"
         )
-        self.threadpool = QThreadPool()
-        print(
-            f"Multithreading with maximum {str(self.threadpool.maxThreadCount())} threads"
-        )
-        self.statusbar.showMessage(
-            f"Multithreading with maximum {str(self.threadpool.maxThreadCount())} threads",
-            2000,
-        )
+        #  self.threadpool = QThreadPool()
+        #  print(
+            #  f"Multithreading with maximum {str(self.threadpool.maxThreadCount())} threads"
+        #  )
+        #  self.statusbar.showMessage(
+            #  f"Multithreading with maximum {str(self.threadpool.maxThreadCount())} threads",
+            #  2000,
+        #  )
         global APP
         APP = Tensura(local=self.local, alt=self.alt)
         self.origin = APP.BASE_URL_ALT if self.alt else APP.BASE_URL
@@ -314,17 +311,27 @@ class TensuraReader(QMainWindow):
         if APP is not None:
             if APP.is_playing:
                 APP.pause()
-                pause_icon = QPixmap("assets/icons/pause.jpeg")
-                self.toggle_play_btn.setIcon(QIcon(pause_icon))
+                play_icon = QPixmap("assets/icons/play.jpeg")
+                self.toggle_play_btn.setIcon(QIcon(play_icon))
                 self.statusbar.showMessage("Reading paused...", 5000)
             else:
                 if APP.player is not None:
                     APP.unpause()
-                    play_icon = QPixmap("assets/icons/play.jpeg")
-                    self.toggle_play_btn.setIcon(QIcon(play_icon))
+                    pause_icon = QPixmap("assets/icons/pause.jpeg")
+                    self.toggle_play_btn.setIcon(QIcon(pause_icon))
                     self.statusbar.showMessage("Reading unpaused...", 5000)
                 else:
+                    self.toggle_play_btn.setText("Loading...")
+                    self.toggle_play_btn.setEnabled(False)
+                    #  worker = Worker(APP.read, self.content)
+                    #  worker.signals.result.connect(lambda s: print(f"Result: {s}"))
+                    #  worker.signals.finished.connect(lambda: print("Done!"))
                     await APP.read(self.content)
+                    #  self.threadpool.start(worker)
+                    pause_icon = QPixmap("assets/icons/pause.jpeg")
+                    self.toggle_play_btn.setIcon(QIcon(pause_icon))
+                    self.toggle_play_btn.setText("")
+                    self.toggle_play_btn.setEnabled(True)
                     self.statusbar.showMessage("Reading started...", 5000)
         else:
             self.statusbar.showMessage("App Error: App not initialized properly.", 5000)
