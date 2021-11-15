@@ -185,6 +185,9 @@ background-color: rgb(20, 20, 20);</string>
          <pointsize>11</pointsize>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="toolTip">
         <string>Read using Google online TTS</string>
        </property>
@@ -211,6 +214,9 @@ color: rgb(85, 255, 255);</string>
          <pointsize>11</pointsize>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="toolTip">
         <string>Read with offline tools(Requires some installations)</string>
        </property>
@@ -236,6 +242,9 @@ color: rgb(85, 255, 255);</string>
          <family>FiraMono NF</family>
          <pointsize>12</pointsize>
         </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="toolTip">
         <string>Choose site to read from..</string>
@@ -270,6 +279,9 @@ border-radius: 6px;</string>
          <family>JetBrainsMonoMedium NF</family>
          <pointsize>11</pointsize>
         </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="toolTip">
         <string>Start reading your the light novel</string>
@@ -307,6 +319,9 @@ QPushButton:hover {
          <family>JetBrainsMonoMedium NF</family>
          <pointsize>11</pointsize>
         </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="toolTip">
         <string>Exit application</string>

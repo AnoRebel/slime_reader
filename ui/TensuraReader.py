@@ -19,21 +19,15 @@ class Ui_TensuraReader(object):
         TensuraReader.setMaximumSize(QtCore.QSize(800, 700))
         TensuraReader.setBaseSize(QtCore.QSize(700, 600))
         icon = QtGui.QIcon()
-        icon.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/bg-icon.png"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon.addPixmap(QtGui.QPixmap(":/icons/assets/icons/bg-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         TensuraReader.setWindowIcon(icon)
-        TensuraReader.setStyleSheet(
-            "background-color: rgb(20, 20, 20);\n"
-            "\n"
-            "QStatusBar {\n"
-            "    font-weight: bold;\n"
-            "    color: rgb(85, 255, 255);\n"
-            "    background-color: rgb(20, 20, 20);\n"
-            "}"
-        )
+        TensuraReader.setStyleSheet("background-color: rgb(20, 20, 20);\n"
+"\n"
+"QStatusBar {\n"
+"    font-weight: bold;\n"
+"    color: rgb(85, 255, 255);\n"
+"    background-color: rgb(20, 20, 20);\n"
+"}")
         self.centralwidget = QtWidgets.QWidget(TensuraReader)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -53,7 +47,9 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.progress_lbl.setFont(font)
-        self.progress_lbl.setStyleSheet("QLabel {\n" "    color: #ECECEC;\n" "}")
+        self.progress_lbl.setStyleSheet("QLabel {\n"
+"    color: #ECECEC;\n"
+"}")
         self.progress_lbl.setText("")
         self.progress_lbl.setObjectName("progress_lbl")
         self.gridLayout.addWidget(self.progress_lbl, 2, 5, 1, 5)
@@ -79,12 +75,15 @@ class Ui_TensuraReader(object):
         self.label_3.setObjectName("label_3")
         self.gridLayout.addWidget(self.label_3, 4, 2, 1, 1)
         self.chapter_content = QtWidgets.QTextBrowser(self.centralwidget)
-        self.chapter_content.setStyleSheet(
-            "QTextBrowser {\n"
-            "    padding: 6px;\n"
-            "    color: rgb(236, 236, 236);\n"
-            "}"
-        )
+        font = QtGui.QFont()
+        font.setFamily("mononoki NF")
+        font.setPointSize(11)
+        self.chapter_content.setFont(font)
+        self.chapter_content.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.IBeamCursor))
+        self.chapter_content.setStyleSheet("QTextBrowser {\n"
+"    padding: 6px;\n"
+"    color: rgb(236, 236, 236);\n"
+"}")
         self.chapter_content.setOpenExternalLinks(True)
         self.chapter_content.setObjectName("chapter_content")
         self.gridLayout.addWidget(self.chapter_content, 4, 3, 1, 7)
@@ -96,25 +95,20 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.prev_btn.setFont(font)
-        self.prev_btn.setStyleSheet(
-            "QPushButton {\n"
-            "    color: rgb(85, 255, 255);\n"
-            "    border:  0.5px solid rgb(85, 255, 255);\n"
-            "    padding: 6px;\n"
-            "    border-radius: 4px;\n"
-            "}\n"
-            "\n"
-            "QPushButton:hover {\n"
-            "    background-color: #323232;\n"
-            "}"
-        )
+        self.prev_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.prev_btn.setStyleSheet("QPushButton {\n"
+"    color: rgb(85, 255, 255);\n"
+"    border:  0.5px solid rgb(85, 255, 255);\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #323232;\n"
+"}")
         self.prev_btn.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/prev.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon1.addPixmap(QtGui.QPixmap(":/icons/assets/icons/prev.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.prev_btn.setIcon(icon1)
         self.prev_btn.setObjectName("prev_btn")
         self.horizontalLayout_2.addWidget(self.prev_btn)
@@ -124,25 +118,20 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.toggle_play_btn.setFont(font)
-        self.toggle_play_btn.setStyleSheet(
-            "QPushButton {\n"
-            "    color: rgb(85, 255, 255);\n"
-            "    border:  0.5px solid rgb(85, 255, 255);\n"
-            "    padding: 6px;\n"
-            "    border-radius: 4px;\n"
-            "}\n"
-            "\n"
-            "QPushButton:hover {\n"
-            "    background-color: #323232;\n"
-            "}"
-        )
+        self.toggle_play_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.toggle_play_btn.setStyleSheet("QPushButton {\n"
+"    color: rgb(85, 255, 255);\n"
+"    border:  0.5px solid rgb(85, 255, 255);\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #323232;\n"
+"}")
         self.toggle_play_btn.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/play.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon2.addPixmap(QtGui.QPixmap(":/icons/assets/icons/play.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toggle_play_btn.setIcon(icon2)
         self.toggle_play_btn.setIconSize(QtCore.QSize(16, 16))
         self.toggle_play_btn.setObjectName("toggle_play_btn")
@@ -153,25 +142,20 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.stop_btn.setFont(font)
-        self.stop_btn.setStyleSheet(
-            "QPushButton {\n"
-            "    color: rgb(85, 255, 255);\n"
-            "    border:  0.5px solid rgb(85, 255, 255);\n"
-            "    padding: 6px;\n"
-            "    border-radius: 4px;\n"
-            "}\n"
-            "\n"
-            "QPushButton:hover {\n"
-            "    background-color: #323232;\n"
-            "}"
-        )
+        self.stop_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.stop_btn.setStyleSheet("QPushButton {\n"
+"    color: rgb(85, 255, 255);\n"
+"    border:  0.5px solid rgb(85, 255, 255);\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #323232;\n"
+"}")
         self.stop_btn.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/stop.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon3.addPixmap(QtGui.QPixmap(":/icons/assets/icons/stop.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.stop_btn.setIcon(icon3)
         self.stop_btn.setObjectName("stop_btn")
         self.horizontalLayout_2.addWidget(self.stop_btn)
@@ -181,25 +165,20 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.next_btn.setFont(font)
-        self.next_btn.setStyleSheet(
-            "QPushButton {\n"
-            "    color: rgb(85, 255, 255);\n"
-            "    border:  0.5px solid rgb(85, 255, 255);\n"
-            "    padding: 6px;\n"
-            "    border-radius: 4px;\n"
-            "}\n"
-            "\n"
-            "QPushButton:hover {\n"
-            "    background-color: #323232;\n"
-            "}"
-        )
+        self.next_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.next_btn.setStyleSheet("QPushButton {\n"
+"    color: rgb(85, 255, 255);\n"
+"    border:  0.5px solid rgb(85, 255, 255);\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #323232;\n"
+"}")
         self.next_btn.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/next.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon4.addPixmap(QtGui.QPixmap(":/icons/assets/icons/next.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.next_btn.setIcon(icon4)
         self.next_btn.setObjectName("next_btn")
         self.horizontalLayout_2.addWidget(self.next_btn)
@@ -207,18 +186,17 @@ class Ui_TensuraReader(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.chapter_select = QtWidgets.QComboBox(self.centralwidget)
-        self.chapter_select.setStyleSheet(
-            "QComboBox {\n"
-            "    border:  0.5px solid rgb(85, 255, 255);\n"
-            "    padding: 6px;\n"
-            "    border-radius: 4px;\n"
-            "    color: rgb(85, 255, 255);\n"
-            "}\n"
-            "\n"
-            "QComboBox:hover {\n"
-            "    background-color: #323232;\n"
-            "}"
-        )
+        self.chapter_select.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.chapter_select.setStyleSheet("QComboBox {\n"
+"    border:  0.5px solid rgb(85, 255, 255);\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    color: rgb(85, 255, 255);\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    background-color: #323232;\n"
+"}")
         self.chapter_select.setObjectName("chapter_select")
         self.horizontalLayout.addWidget(self.chapter_select)
         self.load_btn = QtWidgets.QPushButton(self.centralwidget)
@@ -227,24 +205,19 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.load_btn.setFont(font)
-        self.load_btn.setStyleSheet(
-            "QPushButton {\n"
-            "    color: rgb(85, 255, 255);\n"
-            "    border:  0.5px solid rgb(85, 255, 255);\n"
-            "    padding: 6px;\n"
-            "    border-radius: 4px;\n"
-            "}\n"
-            "\n"
-            "QPushButton:hover {\n"
-            "    background-color: #323232;\n"
-            "}"
-        )
+        self.load_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.load_btn.setStyleSheet("QPushButton {\n"
+"    color: rgb(85, 255, 255);\n"
+"    border:  0.5px solid rgb(85, 255, 255);\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #323232;\n"
+"}")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/load.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon5.addPixmap(QtGui.QPixmap(":/icons/assets/icons/load.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.load_btn.setIcon(icon5)
         self.load_btn.setObjectName("load_btn")
         self.horizontalLayout.addWidget(self.load_btn)
@@ -260,9 +233,9 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.progress_label.setFont(font)
-        self.progress_label.setStyleSheet(
-            "QLabel {\n" "    color: rgb(85, 255, 255);\n" "}"
-        )
+        self.progress_label.setStyleSheet("QLabel {\n"
+"    color: rgb(85, 255, 255);\n"
+"}")
         self.progress_label.setText("")
         self.progress_label.setWordWrap(True)
         self.progress_label.setObjectName("progress_label")
@@ -276,28 +249,30 @@ class Ui_TensuraReader(object):
         font.setBold(True)
         font.setWeight(75)
         self.menubar.setFont(font)
-        self.menubar.setStyleSheet("QMenuBar {\n" "    color: #ECECEC;\n" "}")
+        self.menubar.setStyleSheet("QMenuBar {\n"
+"    color: #ECECEC;\n"
+"}")
         self.menubar.setObjectName("menubar")
         self.menuMenu = QtWidgets.QMenu(self.menubar)
         font = QtGui.QFont()
         font.setFamily("JetBrainsMono NF")
         self.menuMenu.setFont(font)
-        self.menuMenu.setStyleSheet("QMenu {\n" "    color: #ECECEC;\n" "}")
+        self.menuMenu.setStyleSheet("QMenu {\n"
+"    color: #ECECEC;\n"
+"}")
         self.menuMenu.setObjectName("menuMenu")
         self.menuAbout = QtWidgets.QMenu(self.menubar)
         font = QtGui.QFont()
         font.setFamily("JetBrainsMono NF")
         self.menuAbout.setFont(font)
-        self.menuAbout.setStyleSheet(
-            "QMenu {\n"
-            "    color: #ECECEC;\n"
-            "}\n"
-            "\n"
-            "QMenu:hover {\n"
-            "    color: #141414;\n"
-            "    background-color: rgb(85, 255, 255);\n"
-            "}"
-        )
+        self.menuAbout.setStyleSheet("QMenu {\n"
+"    color: #ECECEC;\n"
+"}\n"
+"\n"
+"QMenu:hover {\n"
+"    color: #141414;\n"
+"    background-color: rgb(85, 255, 255);\n"
+"}")
         self.menuAbout.setObjectName("menuAbout")
         TensuraReader.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(TensuraReader)
@@ -306,29 +281,17 @@ class Ui_TensuraReader(object):
         self.action_Restart = QtWidgets.QAction(TensuraReader)
         self.action_Restart.setCheckable(False)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/restart.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon6.addPixmap(QtGui.QPixmap(":/icons/assets/icons/restart.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_Restart.setIcon(icon6)
         self.action_Restart.setObjectName("action_Restart")
         self.action_Quit = QtWidgets.QAction(TensuraReader)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/exit.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon7.addPixmap(QtGui.QPixmap(":/icons/assets/icons/exit.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_Quit.setIcon(icon7)
         self.action_Quit.setObjectName("action_Quit")
         self.action_About = QtWidgets.QAction(TensuraReader)
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(
-            QtGui.QPixmap(":/icons/assets/icons/about.jpeg"),
-            QtGui.QIcon.Normal,
-            QtGui.QIcon.Off,
-        )
+        icon8.addPixmap(QtGui.QPixmap(":/icons/assets/icons/about.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_About.setIcon(icon8)
         self.action_About.setObjectName("action_About")
         self.action_LoadLink = QtWidgets.QAction(TensuraReader)
@@ -348,17 +311,16 @@ class Ui_TensuraReader(object):
     def retranslateUi(self, TensuraReader):
         _translate = QtCore.QCoreApplication.translate
         TensuraReader.setWindowTitle(_translate("TensuraReader", "Tensura Reader"))
+        self.chapter_content.setHtml(_translate("TensuraReader", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'mononoki NF\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p></body></html>"))
         self.prev_btn.setToolTip(_translate("TensuraReader", "Go To Previous Chapter"))
-        self.prev_btn.setStatusTip(
-            _translate("TensuraReader", "Go To Previous Chapter")
-        )
+        self.prev_btn.setStatusTip(_translate("TensuraReader", "Go To Previous Chapter"))
         self.prev_btn.setShortcut(_translate("TensuraReader", "P"))
-        self.toggle_play_btn.setToolTip(
-            _translate("TensuraReader", "Toggle Play/Pause")
-        )
-        self.toggle_play_btn.setStatusTip(
-            _translate("TensuraReader", "Toggle Play/Pause")
-        )
+        self.toggle_play_btn.setToolTip(_translate("TensuraReader", "Toggle Play/Pause"))
+        self.toggle_play_btn.setStatusTip(_translate("TensuraReader", "Toggle Play/Pause"))
         self.toggle_play_btn.setShortcut(_translate("TensuraReader", "Space"))
         self.stop_btn.setToolTip(_translate("TensuraReader", "Stop Reading"))
         self.stop_btn.setStatusTip(_translate("TensuraReader", "Stop Reading"))
@@ -366,17 +328,13 @@ class Ui_TensuraReader(object):
         self.next_btn.setToolTip(_translate("TensuraReader", "Go To Next Chapter"))
         self.next_btn.setStatusTip(_translate("TensuraReader", "Go To Next Chapter"))
         self.next_btn.setShortcut(_translate("TensuraReader", "N"))
-        self.load_btn.setToolTip(
-            _translate("TensuraReader", "Load the chapter for reading")
-        )
+        self.load_btn.setToolTip(_translate("TensuraReader", "Load the chapter for reading"))
         self.load_btn.setStatusTip(_translate("TensuraReader", "Load Selected Chapter"))
         self.load_btn.setText(_translate("TensuraReader", "Load"))
         self.menuMenu.setTitle(_translate("TensuraReader", "Menu"))
         self.menuAbout.setTitle(_translate("TensuraReader", "Help"))
         self.action_Restart.setText(_translate("TensuraReader", "&Restart"))
-        self.action_Restart.setToolTip(
-            _translate("TensuraReader", "Change Reading Site")
-        )
+        self.action_Restart.setToolTip(_translate("TensuraReader", "Change Reading Site"))
         self.action_Restart.setShortcut(_translate("TensuraReader", "Ctrl+R"))
         self.action_Quit.setText(_translate("TensuraReader", "&Quit"))
         self.action_Quit.setToolTip(_translate("TensuraReader", "Quit Application"))
@@ -385,6 +343,4 @@ class Ui_TensuraReader(object):
         self.action_About.setToolTip(_translate("TensuraReader", "About Application"))
         self.action_LoadLink.setText(_translate("TensuraReader", "&Load Link"))
         self.action_LoadLink.setShortcut(_translate("TensuraReader", "Ctrl+L"))
-
-
 import tensura_rc

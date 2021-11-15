@@ -131,11 +131,27 @@ QStatusBar {
       </item>
       <item row="4" column="3" colspan="7">
        <widget class="QTextBrowser" name="chapter_content">
+        <property name="font">
+         <font>
+          <family>mononoki NF</family>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="cursor" stdset="0">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="styleSheet">
          <string notr="true">QTextBrowser {
 	padding: 6px;
 	color: rgb(236, 236, 236);
 }</string>
+        </property>
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'mononoki NF'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
@@ -152,6 +168,9 @@ QStatusBar {
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="toolTip">
            <string>Go To Previous Chapter</string>
@@ -191,6 +210,9 @@ QPushButton:hover {
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="toolTip">
            <string>Toggle Play/Pause</string>
@@ -237,6 +259,9 @@ QPushButton:hover {
             <bold>true</bold>
            </font>
           </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
           <property name="toolTip">
            <string>Stop Reading</string>
           </property>
@@ -276,6 +301,9 @@ QPushButton:hover {
             <bold>true</bold>
            </font>
           </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
           <property name="toolTip">
            <string>Go To Next Chapter</string>
           </property>
@@ -312,6 +340,9 @@ QPushButton:hover {
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QComboBox" name="chapter_select">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
           <property name="styleSheet">
            <string notr="true">QComboBox {
 	border:  0.5px solid rgb(85, 255, 255);
@@ -334,6 +365,9 @@ QComboBox:hover {
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="toolTip">
            <string>Load the chapter for reading</string>
